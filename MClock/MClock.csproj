@@ -19,7 +19,10 @@
 
   <ItemGroup>
     <None Remove="Resources\rainbow.gif" />
-    <Resource Include="images\rainbow.gif" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="images\" />
   </ItemGroup>
 
 </Project>

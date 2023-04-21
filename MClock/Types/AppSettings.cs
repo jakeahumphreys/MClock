@@ -16,7 +16,7 @@ public sealed class AppSettings
 
 public sealed class TimeSettings
 {
-    public string WorkStartTime { get; set; }
-    public string WorkEndTime { get; set; }
-    public string KaizenStartTime { get; set; }
+    public string WorkStartTime { get; set; } = null!;
+    public string WorkEndTime { get; set; } = null!;
+    public string KaizenStartTime { get; set; } = null!;
 }

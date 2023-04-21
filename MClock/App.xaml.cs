@@ -8,8 +8,8 @@ namespace MClock
 {
     public partial class App : Application
     {
-        private IServiceProvider ServiceProvider { get; set; }
-        private IConfiguration Configuration { get; set; }
+        private IServiceProvider? ServiceProvider { get; set; }
+        private IConfiguration? Configuration { get; set; }
 
         protected override void OnStartup(StartupEventArgs e)
         {
