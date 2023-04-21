@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using MClock.Common;
 using MClock.Types;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Toolkit.Uwp.Notifications;
@@ -14,6 +15,7 @@ namespace MClock
     {
         private readonly IConfiguration _configuration;
         private readonly AppSettings _appSettings;
+        private readonly TimeHelper _timeHelper;
 
         public bool IsKaizenTime = false;
 
@@ -22,6 +24,7 @@ namespace MClock
             _configuration = configuration;
             InitializeComponent();
             _appSettings = CreateSettings();
+            _timeHelper = new TimeHelper(_appSettings);
             Timer.Loaded += Timer_Loaded;
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
 
@@ -60,7 +63,7 @@ namespace MClock
         {
             var timeOfDay = new TimeOnly(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             
-            if (timeOfDay == GetEndTime())
+            if (timeOfDay == TimeHelper.GetEndTime())
             {
                 new ToastContentBuilder().AddText("Work day has finished, remember to patch uncommitted work!").Show();
             }
@@ -124,55 +127,21 @@ namespace MClock
             {
                 var currentTime = new TimeOnly(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
 
-                if (DateTime.Today.DayOfWeek == DayOfWeek.Friday && currentTime > GetKaizenStartTime() && currentTime < GetEndTime() && !IsKaizenTime)
+                if (DateTime.Today.DayOfWeek == DayOfWeek.Friday && currentTime > TimeHelper.GetKaizenStartTime() && currentTime < TimeHelper.GetEndTime() && !IsKaizenTime)
                 {
                     IsKaizenTime = true;
                     SetTimelineColour(Colors.Purple);
                 }
             }
         }
-
-        private TimeOnly GetStartTime()
-        {
-            var startTime = _appSettings.TimeSettings.WorkStartTime;
-            var hour = Convert.ToInt32(startTime.Substring(0, 2));
-            var minutes = Convert.ToInt32(startTime.Substring(3, 2));
-            return new TimeOnly(hour, minutes, 0);
-        }
-
-        private TimeOnly GetEndTime()
-        {
-            var endTime = _appSettings.TimeSettings.WorkEndTime;
-            var hour = Convert.ToInt32(endTime.Substring(0, 2));
-            var minutes = Convert.ToInt32(endTime.Substring(3, 2));
-            return new TimeOnly(hour, minutes, 0);
-        }
-
-        private TimeOnly GetKaizenStartTime()
-        {
-            var kaizenStartTime = _appSettings.TimeSettings.KaizenStartTime;
-            var hour = Convert.ToInt32(kaizenStartTime.Substring(0, 2));
-            var minutes = Convert.ToInt32(kaizenStartTime.Substring(3, 2));
-            return new TimeOnly(hour, minutes, 0);
-        }
         
-        public TimeOnly GetMidnight()
-        {
-            return new TimeOnly(0, 0, 0);
-        }
-
         private void ShowTime()
         {
             this.Dispatcher.Invoke(() =>
             {
-                Timer.Text = FormatTime();
+                Timer.Text = DateTime.Now.ToString("ddd dd MMM\r\nHH:mm:ss");
                 SetTimeline();
             });
-        }
-
-        private static string FormatTime()
-        {
-            return DateTime.Now.ToString("ddd dd MMM\r\nHH:mm:ss");
         }
 
         private void SetTimeline()
@@ -206,12 +175,12 @@ namespace MClock
 
         private bool DuringWork(TimeOnly currentTime)
         {
-            return currentTime< GetEndTime();
+            return currentTime < TimeHelper.GetEndTime();
         }
 
         private bool BeforeWork(TimeOnly currentTime)
         {
-            return currentTime < GetStartTime();
+            return currentTime < TimeHelper.GetStartTime();
         }
 
         private double GetNewWidth(DateTime now, double fullWidth)
@@ -220,26 +189,21 @@ namespace MClock
             if (BeforeWork(currentTime))
             {
                 var partialDay = (now.Hour) * 60 + now.Minute;
-                var fraction = GetFraction(GetStartTime().Hour, partialDay);
+                var fraction = MathHelper.GetFraction(TimeHelper.GetStartTime().Hour, partialDay);
                 return  fullWidth * fraction;
             }
             else if (DuringWork(currentTime))
             {
-                var partialDay = ((currentTime - GetStartTime()).TotalMinutes) * 60 + now.Minute;
-                var fraction = GetFraction((GetEndTime() - GetStartTime()).TotalMinutes, partialDay);
+                var partialDay = ((currentTime - TimeHelper.GetStartTime()).TotalMinutes) * 60 + now.Minute;
+                var fraction = MathHelper.GetFraction((TimeHelper.GetEndTime() - TimeHelper.GetStartTime()).TotalMinutes, partialDay);
                 return fullWidth * fraction;
             }
             else
             {
-                var partialDay = ((currentTime - GetEndTime()).TotalMinutes) * 60 + now.Minute;
-                var fraction = GetFraction((GetMidnight() - GetEndTime()).TotalMinutes, partialDay);
+                var partialDay = ((currentTime - TimeHelper.GetEndTime()).TotalMinutes) * 60 + now.Minute;
+                var fraction = MathHelper.GetFraction((TimeHelper.GetMidnight() - TimeHelper.GetEndTime()).TotalMinutes, partialDay);
                 return fullWidth * fraction;
             }
-        }
-
-        private double GetFraction(double startHour, double partialDay)
-        {
-            return partialDay / (startHour * 60.0);
         }
 
         private void WindowDeactivated(object sender, EventArgs e)
