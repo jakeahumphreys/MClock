@@ -1,24 +1,55 @@
 ﻿using System;
+using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
+using MClock.Types;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Toolkit.Uwp.Notifications;
 
-namespace Clock
+namespace MClock
 {
     public partial class MainWindow : Window
     {
+        private readonly IConfiguration _configuration;
         private const int StartHour = 8;
         private const int EndHour = 17;
         private const int EndHourMinutes = 30;
+        public const int KaizenTimeStartHour = 13;
+        public const int KaizenTimeStartMinutes = 30;
+        private readonly AppSettings _appSettings;
 
-        public MainWindow()
+        public bool IsKaizenTime = false;
+
+        public MainWindow(IConfiguration configuration)
         {
+            _configuration = configuration;
             InitializeComponent();
+            _appSettings = CreateSettings();
             Timer.Loaded += Timer_Loaded;
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
+
+            if (_appSettings.InvertColours)
+            {
+               SetTimelineColour(Colors.Green);
+               SetBacklineColour(Colors.Red);
+            }
+            
+            ChangeColoursIfKaizenTime();
         }
-        
+
+        private AppSettings CreateSettings()
+        {
+            return new AppSettings
+            {
+                AutoStartWorkApps = Convert.ToBoolean(_configuration["AutoStartWorkApps"]),
+                EnableNotifications = Convert.ToBoolean(_configuration["EnableNotifications"]),
+                InvertColours = Convert.ToBoolean(_configuration["InvertColours"])
+            };
+        }
+
         private static void Current_DispatcherUnhandledException (object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             e.Handled = true;
@@ -46,7 +77,40 @@ namespace Clock
         private void ShowTick(object? sender, System.Timers.ElapsedEventArgs e)
         {
             HandleNotifications();
+            ChangeColoursIfKaizenTime();
             ShowTime();            
+        }
+
+        private void SetTimelineColour(Color colour)
+        {
+            Application.Current.Dispatcher.BeginInvoke((ThreadStart) delegate
+            {
+                TimeLine.Fill = new SolidColorBrush(colour);
+            });
+        }
+        
+        private void SetBacklineColour(Color colour)
+        {
+            Application.Current.Dispatcher.BeginInvoke((ThreadStart) delegate
+            {
+                BackLine.Fill = new SolidColorBrush(colour);
+            });
+        }
+
+        private void ChangeColoursIfKaizenTime()
+        {
+            if (_appSettings.EnableKaizenTimeColours)
+            {
+                var currentTimeOfDay = new TimeOnly(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                var KaizenTimeStart = new TimeOnly(KaizenTimeStartHour, KaizenTimeStartMinutes, 0);
+                var KaizenTimeEnd = new TimeOnly(EndHour, EndHourMinutes, 0);
+
+                if (DateTime.Today.DayOfWeek == DayOfWeek.Friday && currentTimeOfDay > KaizenTimeStart && currentTimeOfDay < KaizenTimeEnd && !IsKaizenTime)
+                {
+                    IsKaizenTime = true;
+                    SetTimelineColour(Colors.Purple);
+                }
+            }
         }
 
         private void ShowTime()
