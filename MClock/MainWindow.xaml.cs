@@ -1,33 +1,19 @@
 ﻿using System;
 using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using ABI.System;
 using MClock.Types;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Toolkit.Uwp.Notifications;
-using WpfAnimatedGif;
-using Uri = System.Uri;
 
 namespace MClock
 {
     public partial class MainWindow : Window
     {
         private readonly IConfiguration _configuration;
-        private const int StartHour = 8;
-        private const int EndHour = 17;
-        private const int EndHourMinutes = 30;
-        public const int KaizenTimeStartHour = 13;
-        public const int KaizenTimeStartMinutes = 30;
         private readonly AppSettings _appSettings;
-
-
-        private TimeOnly StartTime;
-        private TimeOnly Endtime;
 
         public bool IsKaizenTime = false;
 
@@ -38,9 +24,6 @@ namespace MClock
             _appSettings = CreateSettings();
             Timer.Loaded += Timer_Loaded;
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
-
-            StartTime = new TimeOnly(08, 00, 00);
-            Endtime = new TimeOnly(17, 30, 00);
 
             if (_appSettings.InvertColours)
             {
@@ -57,7 +40,14 @@ namespace MClock
             {
                 AutoStartWorkApps = Convert.ToBoolean(_configuration["AutoStartWorkApps"]),
                 EnableNotifications = Convert.ToBoolean(_configuration["EnableNotifications"]),
-                InvertColours = Convert.ToBoolean(_configuration["InvertColours"])
+                InvertColours = Convert.ToBoolean(_configuration["InvertColours"]),
+                EnableKaizenTimeColours = Convert.ToBoolean(_configuration["EnableKaizenTimeColours"]),
+                TimeSettings = new TimeSettings
+                {
+                    WorkStartTime = _configuration.GetSection("TimeSettings")["WorkStartTime"],
+                    WorkEndTime = _configuration.GetSection("TimeSettings")["WorkEndTime"],
+                    KaizenStartTime = _configuration.GetSection("TimeSettings")["KaizenStartTime"]
+                }
             };
         }
 
@@ -70,7 +60,7 @@ namespace MClock
         {
             var timeOfDay = new TimeOnly(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             
-            if (timeOfDay == new TimeOnly(EndHour, EndHourMinutes, 0))
+            if (timeOfDay == GetEndTime())
             {
                 new ToastContentBuilder().AddText("Work day has finished, remember to patch uncommitted work!").Show();
             }
@@ -108,35 +98,33 @@ namespace MClock
             });
         }
 
-        private void SetTimelineToRainbow()
-        {
-            var gradientBrush = new LinearGradientBrush();
-            gradientBrush.StartPoint = new Point(0,0);
-            gradientBrush.EndPoint = new Point(1,1);
-            gradientBrush.GradientStops.Add(
-                new GradientStop(Colors.Yellow, 0.0));
-            gradientBrush.GradientStops.Add(
-                new GradientStop(Colors.Red, 0.25));
-            gradientBrush.GradientStops.Add(
-                new GradientStop(Colors.Blue, 0.75));
-            gradientBrush.GradientStops.Add(
-                new GradientStop(Colors.LimeGreen, 1.0));
-            
-            Application.Current.Dispatcher.BeginInvoke((ThreadStart) delegate
-            {
-                TimeLine.Fill = gradientBrush;
-            });
-        }
+        // private void SetTimelineToRainbow()
+        // {
+        //     var gradientBrush = new LinearGradientBrush();
+        //     gradientBrush.StartPoint = new Point(0,0);
+        //     gradientBrush.EndPoint = new Point(1,1);
+        //     gradientBrush.GradientStops.Add(
+        //         new GradientStop(Colors.Yellow, 0.0));
+        //     gradientBrush.GradientStops.Add(
+        //         new GradientStop(Colors.Red, 0.25));
+        //     gradientBrush.GradientStops.Add(
+        //         new GradientStop(Colors.Blue, 0.75));
+        //     gradientBrush.GradientStops.Add(
+        //         new GradientStop(Colors.LimeGreen, 1.0));
+        //     
+        //     Application.Current.Dispatcher.BeginInvoke((ThreadStart) delegate
+        //     {
+        //         TimeLine.Fill = gradientBrush;
+        //     });
+        // }
 
         private void ChangeColoursIfKaizenTime()
         {
             if (_appSettings.EnableKaizenTimeColours)
             {
-                var currentTimeOfDay = new TimeOnly(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                var KaizenTimeStart = new TimeOnly(KaizenTimeStartHour, KaizenTimeStartMinutes, 0);
-                var KaizenTimeEnd = new TimeOnly(EndHour, EndHourMinutes, 0);
+                var currentTime = new TimeOnly(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
 
-                if (DateTime.Today.DayOfWeek == DayOfWeek.Friday && currentTimeOfDay > KaizenTimeStart && currentTimeOfDay < KaizenTimeEnd && !IsKaizenTime)
+                if (DateTime.Today.DayOfWeek == DayOfWeek.Friday && currentTime > GetKaizenStartTime() && currentTime < GetEndTime() && !IsKaizenTime)
                 {
                     IsKaizenTime = true;
                     SetTimelineColour(Colors.Purple);
@@ -146,14 +134,28 @@ namespace MClock
 
         private TimeOnly GetStartTime()
         {
-            return new TimeOnly(08, 0, 0);
+            var startTime = _appSettings.TimeSettings.WorkStartTime;
+            var hour = Convert.ToInt32(startTime.Substring(0, 2));
+            var minutes = Convert.ToInt32(startTime.Substring(3, 2));
+            return new TimeOnly(hour, minutes, 0);
         }
 
         private TimeOnly GetEndTime()
         {
-            return new TimeOnly(17, 30, 0);
+            var endTime = _appSettings.TimeSettings.WorkEndTime;
+            var hour = Convert.ToInt32(endTime.Substring(0, 2));
+            var minutes = Convert.ToInt32(endTime.Substring(3, 2));
+            return new TimeOnly(hour, minutes, 0);
         }
 
+        private TimeOnly GetKaizenStartTime()
+        {
+            var kaizenStartTime = _appSettings.TimeSettings.KaizenStartTime;
+            var hour = Convert.ToInt32(kaizenStartTime.Substring(0, 2));
+            var minutes = Convert.ToInt32(kaizenStartTime.Substring(3, 2));
+            return new TimeOnly(hour, minutes, 0);
+        }
+        
         public TimeOnly GetMidnight()
         {
             return new TimeOnly(0, 0, 0);
@@ -218,7 +220,7 @@ namespace MClock
             if (BeforeWork(currentTime))
             {
                 var partialDay = (now.Hour) * 60 + now.Minute;
-                var fraction = GetFraction(StartHour, partialDay);
+                var fraction = GetFraction(GetStartTime().Hour, partialDay);
                 return  fullWidth * fraction;
             }
             else if (DuringWork(currentTime))
