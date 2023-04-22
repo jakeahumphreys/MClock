@@ -14,6 +14,7 @@ namespace MClock
         private readonly TimeHelper _timeHelper;
         private readonly RichPresenceService _richPresenceService;
         private readonly ColourManager _colourManager;
+        private readonly NotificationService _notificationService;
 
         public MainWindow(AppSettings appSettings)
         {
@@ -23,9 +24,9 @@ namespace MClock
             
             _colourManager = new ColourManager(this, appSettings);
             _colourManager.UpdateAppColours();
-            
             _richPresenceService = new RichPresenceService(appSettings);
             _richPresenceService.StartRichPresenceIfEnabled();
+            _notificationService = new NotificationService(appSettings);
 
             Timer.Loaded += Timer_Loaded;
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
@@ -35,14 +36,6 @@ namespace MClock
         private static void Current_DispatcherUnhandledException (object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             e.Handled = true;
-        }
-
-        private void HandleNotifications()
-        {
-            if (TimeHelper.GetCurrentTime() == TimeHelper.GetEndTime())
-            {
-                new ToastContentBuilder().AddText("Work day has finished, remember to patch uncommitted work!").Show();
-            }
         }
 
         private void Timer_Loaded(object sender, RoutedEventArgs e)
@@ -58,7 +51,7 @@ namespace MClock
         {
             _richPresenceService.UpdateRichPresenceIfEnabled();
             _colourManager.UpdateAppColours();
-            HandleNotifications();
+            _notificationService.HandleNotifications();
             ShowTime();            
         }
         

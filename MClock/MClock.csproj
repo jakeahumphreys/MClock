@@ -18,14 +18,9 @@
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
     <None Update="appsettings.json"><CopyToOutputDirectory>Always</CopyToOutputDirectory></None>
     <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Resources\rainbow.gif" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="images\speed_test_computer_pc_time_clock_icon_193930.png" />
+    <None Update="images\sunset.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
