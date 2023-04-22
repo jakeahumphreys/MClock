@@ -24,14 +24,18 @@ namespace MClock
 
         public MainWindow(IConfiguration configuration)
         {
+            InitializeComponent();
+
             _configuration = configuration;
             _discordRpcClient = new DiscordRpcClient("1099310581112119316");
-            InitializeComponent();
             _appSettings = CreateSettings();
             _timeHelper = new TimeHelper(_appSettings);
+            
             Timer.Loaded += Timer_Loaded;
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             Application.Current.MainWindow.Closing += OnWindowClosing;
+            
+
             StartDiscordRichPresence();
             HandleAppColours();
         }
