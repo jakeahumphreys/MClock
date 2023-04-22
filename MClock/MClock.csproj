@@ -6,9 +6,11 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>images\icon.ico</ApplicationIcon>
+    <UserSecretsId>723a5714-4c4a-4a03-b4f7-57dc6248da78</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DiscordRichPresence" Version="1.1.3.18" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0-preview.3.23174.8" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="8.0.0-preview.3.23174.8" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0-preview.3.23174.8" />

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using DiscordRPC;
 using MClock.Common;
 using MClock.Types;
 using Microsoft.Extensions.Configuration;
@@ -16,17 +18,21 @@ namespace MClock
         private readonly IConfiguration _configuration;
         private readonly AppSettings _appSettings;
         private readonly TimeHelper _timeHelper;
+        private readonly DiscordRpcClient _discordRpcClient;
 
         public bool IsKaizenTime = false;
 
         public MainWindow(IConfiguration configuration)
         {
             _configuration = configuration;
+            _discordRpcClient = new DiscordRpcClient("1099310581112119316");
             InitializeComponent();
             _appSettings = CreateSettings();
             _timeHelper = new TimeHelper(_appSettings);
             Timer.Loaded += Timer_Loaded;
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
+            SetDiscordRichPresence();
+
 
             if (_appSettings.InvertColours)
             {
@@ -37,6 +43,36 @@ namespace MClock
             ChangeColoursIfKaizenTime();
         }
 
+        private void SetDiscordRichPresence()
+        {
+            _discordRpcClient.Initialize();
+            _discordRpcClient.SetPresence(new RichPresence
+            {
+                Details = "I'm currently at work 🤓",
+            });
+        }
+
+        private void SetDiscordRichPresenceTimeLeft()
+        {
+            var currentTime = TimeOnly.FromDateTime(DateTime.Now);
+            var timeLeft = TimeHelper.GetEndTime() - currentTime;
+
+            var hoursLeft = Math.Floor((double) timeLeft.Hours);
+            var minutesLeft = Math.Floor((double) timeLeft.Minutes);
+            var secondsLeft = Math.Floor((double) timeLeft.Seconds);
+
+            var timeLeftString = $"Finishing in {hoursLeft} hours {minutesLeft} minutes and {secondsLeft} seconds";
+
+            if (hoursLeft < 0)
+                timeLeftString = $"Finishing in {minutesLeft} minutes and {secondsLeft} seconds.";
+            
+            _discordRpcClient.SetPresence(new RichPresence
+            {
+                Details = timeLeftString,
+                State = "Likely being productive"
+            });
+        }
+
         private AppSettings CreateSettings()
         {
             return new AppSettings
@@ -45,6 +81,7 @@ namespace MClock
                 EnableNotifications = Convert.ToBoolean(_configuration["EnableNotifications"]),
                 InvertColours = Convert.ToBoolean(_configuration["InvertColours"]),
                 EnableKaizenTimeColours = Convert.ToBoolean(_configuration["EnableKaizenTimeColours"]),
+                EnableDiscordRichPresence = Convert.ToBoolean(_configuration["EnableDiscordRichPresence"]),
                 TimeSettings = new TimeSettings
                 {
                     WorkStartTime = _configuration.GetSection("TimeSettings")["WorkStartTime"],
@@ -81,6 +118,7 @@ namespace MClock
         private void ShowTick(object? sender, System.Timers.ElapsedEventArgs e)
         {
             HandleNotifications();
+            SetDiscordRichPresenceTimeLeft();
             ChangeColoursIfKaizenTime();
             ShowTime();            
         }
@@ -205,6 +243,12 @@ namespace MClock
                 return fullWidth * fraction;
             }
         }
+
+        private void OnWindowClosing(object sender, CancelEventArgs e)
+        {
+            _discordRpcClient.Dispose();
+        }
+        
 
         private void WindowDeactivated(object sender, EventArgs e)
         {
