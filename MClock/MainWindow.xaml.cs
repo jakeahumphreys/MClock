@@ -1,14 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Threading;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Threading;
-using DiscordRPC;
 using MClock.Common;
 using MClock.Types;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Toolkit.Uwp.Notifications;
 
 namespace MClock
@@ -68,7 +64,7 @@ namespace MClock
         
         private void ShowTime()
         {
-            this.Dispatcher.Invoke(() =>
+            Dispatcher.Invoke(() =>
             {
                 Timer.Text = DateTime.Now.ToString("ddd dd MMM\r\nHH:mm:ss");
                 SetTimeline();
@@ -111,7 +107,7 @@ namespace MClock
                 var fraction = MathHelper.GetFraction(TimeHelper.GetStartTime().Hour, partialDay);
                 return  fullWidth * fraction;
             }
-            else if (TimeHelper.IsDuringWork())
+            if (TimeHelper.IsDuringWork())
             {
                 var partialDay = ((currentTime - TimeHelper.GetStartTime()).TotalMinutes) * 60 + now.Minute;
                 var fraction = MathHelper.GetFraction((TimeHelper.GetEndTime() - TimeHelper.GetStartTime()).TotalMinutes, partialDay);
@@ -133,13 +129,13 @@ namespace MClock
 
         private void WindowDeactivated(object sender, EventArgs e)
         {
-            Window window = (Window)sender;
+            var window = (Window)sender;
             window.Topmost = true;
         }
 
         private void Mouse_Down(object sender, MouseButtonEventArgs e)
         {
-            this.DragMove();
+            DragMove();
             e.Handled = true;
         }
     }
