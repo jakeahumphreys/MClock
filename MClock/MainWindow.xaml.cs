@@ -55,7 +55,14 @@ namespace MClock
                 _discordRpcClient.SetPresence(new RichPresence
                 {
                     Details = RichPresenceHelper.GetTimeLeftString(),
-                    State = RichPresenceHelper.GetStateString()
+                    State = RichPresenceHelper.GetStateString(),
+                    Assets = new Assets
+                    {
+                        SmallImageKey = RichPresenceHelper.GetSmallImageKey(),
+                        LargeImageKey = RichPresenceHelper.GetLargeImageKey(),
+                        LargeImageText = "Everything is fine",
+                        SmallImageText = "Codeweaving"
+                    }
                 });
             }
         }

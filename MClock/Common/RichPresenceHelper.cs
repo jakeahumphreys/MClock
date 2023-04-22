@@ -13,10 +13,10 @@ public static class RichPresenceHelper
         var minutesLeft = Math.Floor((double) timeLeft.Minutes);
         var secondsLeft = Math.Floor((double) timeLeft.Seconds);
 
-        var timeLeftString = $"Finishing in {hoursLeft} hours {minutesLeft} minutes and {secondsLeft} seconds";
+        var timeLeftString = $"{hoursLeft}h:{minutesLeft}m:{secondsLeft}s left";
 
         if (hoursLeft < 0)
-            timeLeftString = $"Finishing in {minutesLeft} minutes and {secondsLeft} seconds.";
+            timeLeftString = $"{minutesLeft}m:{secondsLeft}s left";
 
         return timeLeftString;
     }
@@ -32,5 +32,15 @@ public static class RichPresenceHelper
             statusString = "Lunchtime 🍕";
 
         return statusString;
+    }
+
+    public static string GetSmallImageKey()
+    {
+        return "company_logo";
+    }
+    
+    public static string GetLargeImageKey()
+    {
+        return "nootnoot";
     }
 }
