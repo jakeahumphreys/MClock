@@ -20,6 +20,7 @@ namespace MClock
         private readonly RichPresenceService _richPresenceService;
 
         public bool IsKaizenTime = false;
+        private readonly ColourManager _colourManager;
 
         public MainWindow(IConfiguration configuration)
         {
@@ -29,6 +30,10 @@ namespace MClock
             _appSettings = appSettingsService.GetSettings();
             
             _timeHelper = new TimeHelper(_appSettings);
+            
+            _colourManager = new ColourManager(this, _appSettings);
+            _colourManager.UpdateAppColours();
+            
 
             _richPresenceService = new RichPresenceService(_appSettings);
             _richPresenceService.StartRichPresenceIfEnabled();
@@ -36,29 +41,8 @@ namespace MClock
             Timer.Loaded += Timer_Loaded;
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             Application.Current.MainWindow.Closing += OnWindowClosing;
-            
-            HandleAppColours();
         }
 
-        private void HandleAppColours()
-        {
-            if (TimeHelper.IsWeekend() && _appSettings.ColourSettings.DisableSeparateColoursOnWeekends)
-            {
-                SetTimelineColour(Colors.Green);
-                SetBacklineColour(Colors.Green);
-            }
-            else
-            {
-                if (_appSettings.ColourSettings.InvertColours)
-                {
-                    SetTimelineColour(Colors.Green);
-                    SetBacklineColour(Colors.Red);
-                }
-            
-                ChangeColoursIfKaizenTime();
-            }
-        }
-        
         private static void Current_DispatcherUnhandledException (object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             e.Handled = true;
@@ -84,39 +68,9 @@ namespace MClock
         private void ShowTick(object? sender, System.Timers.ElapsedEventArgs e)
         {
             _richPresenceService.UpdateRichPresenceIfEnabled();
+            _colourManager.UpdateAppColours();
             HandleNotifications();
-            ChangeColoursIfKaizenTime();
             ShowTime();            
-        }
-
-        private void SetTimelineColour(Color colour)
-        {
-            Application.Current.Dispatcher.BeginInvoke((ThreadStart) delegate
-            {
-                TimeLine.Fill = new SolidColorBrush(colour);
-            });
-        }
-        
-        private void SetBacklineColour(Color colour)
-        {
-            Application.Current.Dispatcher.BeginInvoke((ThreadStart) delegate
-            {
-                BackLine.Fill = new SolidColorBrush(colour);
-            });
-        }
-        
-        private void ChangeColoursIfKaizenTime()
-        {
-            if (_appSettings.ColourSettings.EnableKaizenTimeColours)
-            {
-                var currentTime = new TimeOnly(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-
-                if (DateTime.Today.DayOfWeek == DayOfWeek.Friday && currentTime > TimeHelper.GetKaizenStartTime() && currentTime < TimeHelper.GetEndTime() && !IsKaizenTime)
-                {
-                    IsKaizenTime = true;
-                    SetTimelineColour(Colors.Purple);
-                }
-            }
         }
         
         private void ShowTime()
