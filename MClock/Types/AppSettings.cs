@@ -4,9 +4,7 @@ public sealed class AppSettings
 {
     public bool AutoStartWorkApps { get; set; }
     public bool EnableNotifications { get; set; }
-    public bool InvertColours { get; set; }
-    public bool EnableKaizenTimeColours { get; set; }
-    public bool DisableOnWeekends { get; set; }
+    public ColourSettings ColourSettings { get; set; }
     public TimeSettings TimeSettings { get; set; }
     public DiscordRichPresenceSettings DiscordRichPresenceSettings { get; set; }
 
@@ -14,6 +12,13 @@ public sealed class AppSettings
     {
         TimeSettings = new TimeSettings();
     }
+}
+
+public sealed class ColourSettings
+{
+    public bool InvertColours { get; set; }
+    public bool EnableKaizenTimeColours { get; set; }
+    public bool DisableSeparateColoursOnWeekends { get; set; }
 }
 
 public sealed class TimeSettings

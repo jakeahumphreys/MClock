@@ -42,14 +42,14 @@ namespace MClock
 
         private void HandleAppColours()
         {
-            if (_appSettings.DisableOnWeekends)
+            if (TimeHelper.IsWeekend() && _appSettings.ColourSettings.DisableSeparateColoursOnWeekends)
             {
                 SetTimelineColour(Colors.Green);
                 SetBacklineColour(Colors.Green);
             }
             else
             {
-                if (_appSettings.InvertColours)
+                if (_appSettings.ColourSettings.InvertColours)
                 {
                     SetTimelineColour(Colors.Green);
                     SetBacklineColour(Colors.Red);
@@ -101,9 +101,12 @@ namespace MClock
             {
                 AutoStartWorkApps = Convert.ToBoolean(_configuration["AutoStartWorkApps"]),
                 EnableNotifications = Convert.ToBoolean(_configuration["EnableNotifications"]),
-                InvertColours = Convert.ToBoolean(_configuration["InvertColours"]),
-                EnableKaizenTimeColours = Convert.ToBoolean(_configuration["EnableKaizenTimeColours"]),
-                DisableOnWeekends = Convert.ToBoolean(_configuration["DisableOnWeekends"]),
+                ColourSettings = new ColourSettings
+                {
+                    InvertColours = Convert.ToBoolean(_configuration["InvertColours"]),
+                    EnableKaizenTimeColours = Convert.ToBoolean(_configuration["EnableKaizenTimeColours"]),
+                    DisableSeparateColoursOnWeekends = Convert.ToBoolean(_configuration["DisableOnWeekends"]),
+                },
                 TimeSettings = new TimeSettings
                 {
                     WorkStartTime = _configuration.GetSection("TimeSettings")["WorkStartTime"],
@@ -168,7 +171,7 @@ namespace MClock
         
         private void ChangeColoursIfKaizenTime()
         {
-            if (_appSettings.EnableKaizenTimeColours)
+            if (_appSettings.ColourSettings.EnableKaizenTimeColours)
             {
                 var currentTime = new TimeOnly(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
 
