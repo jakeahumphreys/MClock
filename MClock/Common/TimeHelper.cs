@@ -81,4 +81,9 @@ public class TimeHelper
     {
         return GetCurrentTime() >= GetStartTime() && GetCurrentTime() < GetLunchEndTime();
     }
+
+    public static bool IsWeekend()
+    {
+        return DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday;
+    }
 }

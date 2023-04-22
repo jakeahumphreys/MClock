@@ -59,15 +59,26 @@ namespace MClock
             }
         }
 
+        private bool IsDiscordRichPresenceEnabled()
+        {
+            if (!_appSettings.DiscordRichPresenceSettings.EnableRichPresence)
+                return false;
+
+            if (TimeHelper.IsWeekend() && _appSettings.DiscordRichPresenceSettings.EnabledOnWeekends == false)
+                return false;
+
+            return true;
+        }
+
         private void StartDiscordRichPresence()
         {
-            if(_appSettings.DiscordRichPresenceSettings.EnableRichPresence)
+            if(IsDiscordRichPresenceEnabled())
                 _discordRpcClient.Initialize();
         }
 
         private void SetDiscordRichPresenceTimeLeft()
         {
-            if (_appSettings.DiscordRichPresenceSettings.EnableRichPresence)
+            if (IsDiscordRichPresenceEnabled())
             {
                 _discordRpcClient.SetPresence(new RichPresence
                 {
