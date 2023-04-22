@@ -15,7 +15,6 @@ namespace MClock
 {
     public partial class MainWindow : Window
     {
-        private readonly IConfiguration _configuration;
         private readonly AppSettings _appSettings;
         private readonly TimeHelper _timeHelper;
         private readonly RichPresenceService _richPresenceService;
@@ -25,10 +24,10 @@ namespace MClock
         public MainWindow(IConfiguration configuration)
         {
             InitializeComponent();
-
-            _configuration = configuration;
-
-            _appSettings = CreateSettings();
+            
+            var appSettingsService = new AppSettingsService(configuration);
+            _appSettings = appSettingsService.GetSettings();
+            
             _timeHelper = new TimeHelper(_appSettings);
 
             _richPresenceService = new RichPresenceService(_appSettings);
@@ -59,35 +58,7 @@ namespace MClock
                 ChangeColoursIfKaizenTime();
             }
         }
-
-        private AppSettings CreateSettings()
-        {
-            return new AppSettings
-            {
-                AutoStartWorkApps = Convert.ToBoolean(_configuration["AutoStartWorkApps"]),
-                EnableNotifications = Convert.ToBoolean(_configuration["EnableNotifications"]),
-                ColourSettings = new ColourSettings
-                {
-                    InvertColours = Convert.ToBoolean(_configuration.GetSection("ColourSettings")["InvertColours"]),
-                    EnableKaizenTimeColours = Convert.ToBoolean(_configuration.GetSection("ColourSettings")["EnableKaizenTimeColours"]),
-                    DisableSeparateColoursOnWeekends = Convert.ToBoolean(_configuration.GetSection("ColourSettings")["DisableSeparateColoursOnWeekends"]),
-                },
-                TimeSettings = new TimeSettings
-                {
-                    WorkStartTime = _configuration.GetSection("TimeSettings")["WorkStartTime"],
-                    WorkEndTime = _configuration.GetSection("TimeSettings")["WorkEndTime"],
-                    LunchStartTime = _configuration.GetSection("TimeSettings")["LunchStartTime"],
-                    LunchEndTime = _configuration.GetSection("TimeSettings")["LunchEndTime"],
-                    KaizenStartTime = _configuration.GetSection("TimeSettings")["KaizenStartTime"]
-                },
-                DiscordRichPresenceSettings = new DiscordRichPresenceSettings
-                {
-                    EnableRichPresence = Convert.ToBoolean(_configuration.GetSection("DiscordRichPresenceSettings")["EnableRichPresence"]),
-                    EnabledOnWeekends = Convert.ToBoolean(_configuration.GetSection("DiscordRichPresenceSettings")["EnabledOnWeekends"])
-                }
-            };
-        }
-
+        
         private static void Current_DispatcherUnhandledException (object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             e.Handled = true;
