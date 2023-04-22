@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:gif="http://wpfanimatedgif.codeplex.com"
         mc:Ignorable="d" Name="TopWindow"
         Title="Clock" d:DesignWidth="200" Width="243" Height="80" Deactivated="WindowDeactivated" MouseLeftButtonDown="Mouse_Down" WindowStyle="None"
         MaxHeight="80" MaxWidth="243">
@@ -13,8 +12,10 @@
         </Grid.ColumnDefinitions>
         <TextBox HorizontalAlignment="Center" Margin="5,5,5,5" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" TextAlignment="Center" Name="Timer" FontFamily="Arial Black" FontSize="20"
                  Opacity="0.8" Background="White" OpacityMask="#FFFEFEFE" IsHitTestVisible="False" />
+        <Image Width="20" Height="20" Source="/images/discordlogo.png" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="3,3,3,3" Name="DiscordConnected" Visibility="Hidden"/>
         <Rectangle Name="TimeLine" Margin="0,0,0,0" HorizontalAlignment="Left" Height="80"  VerticalAlignment="Center" Width="243" Panel.ZIndex="-4" Fill="Red"/>
         <Rectangle Name="BackLine" Margin="0,0,0,0" HorizontalAlignment="Left" Height="80" VerticalAlignment="Center" Width="243" Grid.Column="1" Panel.ZIndex="-5" Fill="Green" />
         <Rectangle Name="NightLine" HorizontalAlignment="Left" Height="80" VerticalAlignment="Center" Width="243" Panel.ZIndex="-4" Fill="Gray" />
+        
     </Grid>
 </Window>

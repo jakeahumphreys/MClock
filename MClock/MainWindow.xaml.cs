@@ -24,7 +24,7 @@ namespace MClock
             
             _colourManager = new ColourManager(this, appSettings);
             _colourManager.UpdateAppColours();
-            _richPresenceService = new RichPresenceService(appSettings);
+            _richPresenceService = new RichPresenceService(this, appSettings);
             _richPresenceService.StartRichPresenceIfEnabled();
             _notificationService = new NotificationService(appSettings);
 

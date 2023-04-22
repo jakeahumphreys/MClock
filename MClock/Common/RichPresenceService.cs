@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Threading;
+using System.Windows;
+using System.Windows.Media;
 using DiscordRPC;
 using MClock.Types;
 
@@ -6,11 +9,13 @@ namespace MClock.Common;
 
 public class RichPresenceService
 {
+    private readonly MainWindow _mainWindow;
     private readonly AppSettings _appSettings;
     private readonly DiscordRpcClient _discordRpcClient;
 
-    public RichPresenceService(AppSettings appSettings)
+    public RichPresenceService(MainWindow mainWindow, AppSettings appSettings)
     {
+        _mainWindow = mainWindow;
         _appSettings = appSettings;
         _discordRpcClient = new DiscordRpcClient("1099310581112119316");
     }
@@ -71,8 +76,20 @@ public class RichPresenceService
     
     public void StartRichPresenceIfEnabled()
     {
-        if(IsDiscordRichPresenceEnabled())
+        if (IsDiscordRichPresenceEnabled())
+        {
             _discordRpcClient.Initialize();
+            SetDiscordLogoVisibility();
+        }
+    }
+
+    private void SetDiscordLogoVisibility()
+    {
+        Application.Current.Dispatcher.BeginInvoke((ThreadStart) delegate
+        {
+            if (IsDiscordRichPresenceEnabled())
+                _mainWindow.DiscordConnected.Visibility = Visibility.Visible;
+        });
     }
 
     public void StopRichPresenceIfEnabled()
