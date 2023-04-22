@@ -41,6 +41,9 @@ public static class RichPresenceHelper
     
     public static string GetLargeImageKey()
     {
+        if (TimeHelper.IsKaizenTime())
+            return "kaizen";
+        
         return "nootnoot";
     }
 }
