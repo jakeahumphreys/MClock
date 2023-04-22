@@ -19,5 +19,7 @@ public sealed class TimeSettings
 {
     public string WorkStartTime { get; set; } = null!;
     public string WorkEndTime { get; set; } = null!;
+    public string LunchStartTime { get; set; }
+    public string LunchEndTime { get; set; }
     public string KaizenStartTime { get; set; } = null!;
 }

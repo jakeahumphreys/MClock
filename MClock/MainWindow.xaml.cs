@@ -31,9 +31,8 @@ namespace MClock
             _timeHelper = new TimeHelper(_appSettings);
             Timer.Loaded += Timer_Loaded;
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
-            SetDiscordRichPresence();
-
-
+            StartDiscordRichPresence();
+            
             if (_appSettings.InvertColours)
             {
                SetTimelineColour(Colors.Green);
@@ -43,34 +42,22 @@ namespace MClock
             ChangeColoursIfKaizenTime();
         }
 
-        private void SetDiscordRichPresence()
+        private void StartDiscordRichPresence()
         {
-            _discordRpcClient.Initialize();
-            _discordRpcClient.SetPresence(new RichPresence
-            {
-                Details = "I'm currently at work 🤓",
-            });
+            if(_appSettings.EnableDiscordRichPresence)
+                _discordRpcClient.Initialize();
         }
 
         private void SetDiscordRichPresenceTimeLeft()
         {
-            var currentTime = TimeOnly.FromDateTime(DateTime.Now);
-            var timeLeft = TimeHelper.GetEndTime() - currentTime;
-
-            var hoursLeft = Math.Floor((double) timeLeft.Hours);
-            var minutesLeft = Math.Floor((double) timeLeft.Minutes);
-            var secondsLeft = Math.Floor((double) timeLeft.Seconds);
-
-            var timeLeftString = $"Finishing in {hoursLeft} hours {minutesLeft} minutes and {secondsLeft} seconds";
-
-            if (hoursLeft < 0)
-                timeLeftString = $"Finishing in {minutesLeft} minutes and {secondsLeft} seconds.";
-            
-            _discordRpcClient.SetPresence(new RichPresence
+            if (_appSettings.EnableDiscordRichPresence)
             {
-                Details = timeLeftString,
-                State = "Likely being productive"
-            });
+                _discordRpcClient.SetPresence(new RichPresence
+                {
+                    Details = RichPresenceHelper.GetTimeLeftString(),
+                    State = RichPresenceHelper.GetStateString()
+                });
+            }
         }
 
         private AppSettings CreateSettings()
@@ -86,6 +73,8 @@ namespace MClock
                 {
                     WorkStartTime = _configuration.GetSection("TimeSettings")["WorkStartTime"],
                     WorkEndTime = _configuration.GetSection("TimeSettings")["WorkEndTime"],
+                    LunchStartTime = _configuration.GetSection("TimeSettings")["LunchStartTime"],
+                    LunchEndTime = _configuration.GetSection("TimeSettings")["LunchEndTime"],
                     KaizenStartTime = _configuration.GetSection("TimeSettings")["KaizenStartTime"]
                 }
             };
