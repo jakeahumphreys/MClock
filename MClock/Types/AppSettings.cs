@@ -7,6 +7,7 @@ public sealed class AppSettings
     public bool InvertColours { get; set; }
     public bool EnableKaizenTimeColours { get; set; }
     public bool EnableDiscordRichPresence { get; set; }
+    public bool DisableOnWeekends { get; set; }
     public TimeSettings TimeSettings { get; set; }
 
     public AppSettings()

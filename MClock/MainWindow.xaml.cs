@@ -33,14 +33,26 @@ namespace MClock
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             Application.Current.MainWindow.Closing += OnWindowClosing;
             StartDiscordRichPresence();
-            
-            if (_appSettings.InvertColours)
+            HandleAppColours();
+        }
+
+        private void HandleAppColours()
+        {
+            if (_appSettings.DisableOnWeekends)
             {
-               SetTimelineColour(Colors.Green);
-               SetBacklineColour(Colors.Red);
+                SetTimelineColour(Colors.Green);
+                SetBacklineColour(Colors.Green);
             }
+            else
+            {
+                if (_appSettings.InvertColours)
+                {
+                    SetTimelineColour(Colors.Green);
+                    SetBacklineColour(Colors.Red);
+                }
             
-            ChangeColoursIfKaizenTime();
+                ChangeColoursIfKaizenTime();
+            }
         }
 
         private void StartDiscordRichPresence()
@@ -77,6 +89,7 @@ namespace MClock
                 InvertColours = Convert.ToBoolean(_configuration["InvertColours"]),
                 EnableKaizenTimeColours = Convert.ToBoolean(_configuration["EnableKaizenTimeColours"]),
                 EnableDiscordRichPresence = Convert.ToBoolean(_configuration["EnableDiscordRichPresence"]),
+                DisableOnWeekends = Convert.ToBoolean(_configuration["DisableOnWeekends"]),
                 TimeSettings = new TimeSettings
                 {
                     WorkStartTime = _configuration.GetSection("TimeSettings")["WorkStartTime"],
