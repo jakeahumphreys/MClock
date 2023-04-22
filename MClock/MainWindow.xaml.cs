@@ -31,6 +31,7 @@ namespace MClock
             _timeHelper = new TimeHelper(_appSettings);
             Timer.Loaded += Timer_Loaded;
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
+            Application.Current.MainWindow.Closing += OnWindowClosing;
             StartDiscordRichPresence();
             
             if (_appSettings.InvertColours)
@@ -94,9 +95,7 @@ namespace MClock
 
         private void HandleNotifications()
         {
-            var timeOfDay = new TimeOnly(DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-            
-            if (timeOfDay == TimeHelper.GetEndTime())
+            if (TimeHelper.GetCurrentTime() == TimeHelper.GetEndTime())
             {
                 new ToastContentBuilder().AddText("Work day has finished, remember to patch uncommitted work!").Show();
             }
@@ -134,27 +133,7 @@ namespace MClock
                 BackLine.Fill = new SolidColorBrush(colour);
             });
         }
-
-        // private void SetTimelineToRainbow()
-        // {
-        //     var gradientBrush = new LinearGradientBrush();
-        //     gradientBrush.StartPoint = new Point(0,0);
-        //     gradientBrush.EndPoint = new Point(1,1);
-        //     gradientBrush.GradientStops.Add(
-        //         new GradientStop(Colors.Yellow, 0.0));
-        //     gradientBrush.GradientStops.Add(
-        //         new GradientStop(Colors.Red, 0.25));
-        //     gradientBrush.GradientStops.Add(
-        //         new GradientStop(Colors.Blue, 0.75));
-        //     gradientBrush.GradientStops.Add(
-        //         new GradientStop(Colors.LimeGreen, 1.0));
-        //     
-        //     Application.Current.Dispatcher.BeginInvoke((ThreadStart) delegate
-        //     {
-        //         TimeLine.Fill = gradientBrush;
-        //     });
-        // }
-
+        
         private void ChangeColoursIfKaizenTime()
         {
             if (_appSettings.EnableKaizenTimeColours)
@@ -181,18 +160,16 @@ namespace MClock
         private void SetTimeline()
         {
             var time = DateTime.Now;
-            var currentTime = new TimeOnly(time.Hour, time.Minute, time.Second);
-            
             var allDay = OuterGrid.ActualWidth;
             var newWidth = GetNewWidth(time, allDay);
-            if (BeforeWork(currentTime))
+            if (TimeHelper.IsBeforeWork())
             {
                 TimeLine.Width = 0;
                 BackLine.Width = allDay;
                 NightLine.Width = allDay - newWidth;
                 NightLine.HorizontalAlignment = HorizontalAlignment.Right;
             }
-            else if (DuringWork(currentTime))
+            else if (TimeHelper.IsDuringWork())
             {
                 TimeLine.Width = newWidth;
                 BackLine.Width = allDay;
@@ -206,27 +183,17 @@ namespace MClock
                 NightLine.HorizontalAlignment = HorizontalAlignment.Left;
             }
         }
-
-        private bool DuringWork(TimeOnly currentTime)
-        {
-            return currentTime < TimeHelper.GetEndTime();
-        }
-
-        private bool BeforeWork(TimeOnly currentTime)
-        {
-            return currentTime < TimeHelper.GetStartTime();
-        }
-
+        
         private double GetNewWidth(DateTime now, double fullWidth)
         {
             var currentTime = new TimeOnly(now.Hour, now.Minute, now.Second);
-            if (BeforeWork(currentTime))
+            if (TimeHelper.IsBeforeWork())
             {
                 var partialDay = (now.Hour) * 60 + now.Minute;
                 var fraction = MathHelper.GetFraction(TimeHelper.GetStartTime().Hour, partialDay);
                 return  fullWidth * fraction;
             }
-            else if (DuringWork(currentTime))
+            else if (TimeHelper.IsDuringWork())
             {
                 var partialDay = ((currentTime - TimeHelper.GetStartTime()).TotalMinutes) * 60 + now.Minute;
                 var fraction = MathHelper.GetFraction((TimeHelper.GetEndTime() - TimeHelper.GetStartTime()).TotalMinutes, partialDay);

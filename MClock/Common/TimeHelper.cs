@@ -66,6 +66,16 @@ public class TimeHelper
     {
         return DateTime.Today.DayOfWeek == DayOfWeek.Friday && GetCurrentTime() > GetKaizenStartTime() && GetCurrentTime() < GetEndTime();
     }
+    
+    public static bool IsDuringWork()
+    {
+        return GetCurrentTime() < GetEndTime();
+    }
+
+    public static bool IsBeforeWork()
+    {
+        return GetCurrentTime() < GetStartTime();
+    }
 
     public static bool IsLunchTime()
     {
