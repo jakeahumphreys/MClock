@@ -23,10 +23,10 @@ public static class RichPresenceHelper
 
     public static string GetStateString()
     {
-        var statusString = "Working away in the code mines.";
+        var statusString = "Working away in the code mines";
 
         if (TimeHelper.IsKaizenTime())
-            statusString = "It's Kaizen time, I'm doing a learn.";
+            statusString = "It's Kaizen time, I'm doing a learn";
 
         if (TimeHelper.IsLunchTime())
             statusString = "Lunchtime 🍕";
