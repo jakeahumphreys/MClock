@@ -18,7 +18,7 @@ namespace MClock
         private readonly IConfiguration _configuration;
         private readonly AppSettings _appSettings;
         private readonly TimeHelper _timeHelper;
-        private readonly DiscordRpcClient _discordRpcClient;
+        private readonly RichPresenceService _richPresenceService;
 
         public bool IsKaizenTime = false;
 
@@ -27,16 +27,17 @@ namespace MClock
             InitializeComponent();
 
             _configuration = configuration;
-            _discordRpcClient = new DiscordRpcClient("1099310581112119316");
+
             _appSettings = CreateSettings();
             _timeHelper = new TimeHelper(_appSettings);
-            
+
+            _richPresenceService = new RichPresenceService(_appSettings);
+            _richPresenceService.StartRichPresenceIfEnabled();
+
             Timer.Loaded += Timer_Loaded;
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             Application.Current.MainWindow.Closing += OnWindowClosing;
             
-
-            StartDiscordRichPresence();
             HandleAppColours();
         }
 
@@ -56,42 +57,6 @@ namespace MClock
                 }
             
                 ChangeColoursIfKaizenTime();
-            }
-        }
-
-        private bool IsDiscordRichPresenceEnabled()
-        {
-            if (!_appSettings.DiscordRichPresenceSettings.EnableRichPresence)
-                return false;
-
-            if (TimeHelper.IsWeekend() && _appSettings.DiscordRichPresenceSettings.EnabledOnWeekends == false)
-                return false;
-
-            return true;
-        }
-
-        private void StartDiscordRichPresence()
-        {
-            if(IsDiscordRichPresenceEnabled())
-                _discordRpcClient.Initialize();
-        }
-
-        private void SetDiscordRichPresenceTimeLeft()
-        {
-            if (IsDiscordRichPresenceEnabled())
-            {
-                _discordRpcClient.SetPresence(new RichPresence
-                {
-                    Details = RichPresenceHelper.GetTimeLeftString(),
-                    State = RichPresenceHelper.GetStateString(),
-                    Assets = new Assets
-                    {
-                        SmallImageKey = RichPresenceHelper.GetSmallImageKey(),
-                        LargeImageKey = RichPresenceHelper.GetLargeImageKey(),
-                        LargeImageText = "Everything is fine",
-                        SmallImageText = "Codeweaving"
-                    }
-                });
             }
         }
 
@@ -147,8 +112,8 @@ namespace MClock
 
         private void ShowTick(object? sender, System.Timers.ElapsedEventArgs e)
         {
+            _richPresenceService.UpdateRichPresenceIfEnabled();
             HandleNotifications();
-            SetDiscordRichPresenceTimeLeft();
             ChangeColoursIfKaizenTime();
             ShowTime();            
         }
@@ -244,7 +209,7 @@ namespace MClock
 
         private void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            _discordRpcClient.Dispose();
+            _richPresenceService.StopRichPresenceIfEnabled();
         }
         
 
