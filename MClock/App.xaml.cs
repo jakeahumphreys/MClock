@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Windows;
+using MClock.Common;
+using MClock.Types;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,6 +21,10 @@ namespace MClock
             Configuration = builder.Build();
 
             var serviceCollection = new ServiceCollection();
+
+            var appSettingsService = new AppSettingsService(Configuration);
+
+            serviceCollection.AddSingleton(appSettingsService.GetSettings());
             serviceCollection.AddSingleton(Configuration);
             serviceCollection.AddSingleton(typeof(MainWindow));
             

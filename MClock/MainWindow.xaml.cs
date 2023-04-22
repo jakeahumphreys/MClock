@@ -15,27 +15,20 @@ namespace MClock
 {
     public partial class MainWindow : Window
     {
-        private readonly AppSettings _appSettings;
         private readonly TimeHelper _timeHelper;
         private readonly RichPresenceService _richPresenceService;
-
-        public bool IsKaizenTime = false;
         private readonly ColourManager _colourManager;
 
-        public MainWindow(IConfiguration configuration)
+        public MainWindow(AppSettings appSettings)
         {
             InitializeComponent();
+
+            _timeHelper = new TimeHelper(appSettings);
             
-            var appSettingsService = new AppSettingsService(configuration);
-            _appSettings = appSettingsService.GetSettings();
-            
-            _timeHelper = new TimeHelper(_appSettings);
-            
-            _colourManager = new ColourManager(this, _appSettings);
+            _colourManager = new ColourManager(this, appSettings);
             _colourManager.UpdateAppColours();
             
-
-            _richPresenceService = new RichPresenceService(_appSettings);
+            _richPresenceService = new RichPresenceService(appSettings);
             _richPresenceService.StartRichPresenceIfEnabled();
 
             Timer.Loaded += Timer_Loaded;
