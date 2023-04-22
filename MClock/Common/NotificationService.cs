@@ -35,7 +35,10 @@ public sealed class NotificationService
         
         if (TimeHelper.GetCurrentTime() == TimeHelper.GetEndTime())
         {
-            new ToastContentBuilder().AddText("Lunchtime's over!").Show();
+            new ToastContentBuilder()
+                .AddText("Lunchtime's over, back to work!")
+                .AddHeroImage(new Uri($"file:///{Path.GetFullPath("images/lunchTimeOver.png")}"))
+                .Show();
         }
     }
 }
