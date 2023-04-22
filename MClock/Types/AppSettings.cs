@@ -6,9 +6,9 @@ public sealed class AppSettings
     public bool EnableNotifications { get; set; }
     public bool InvertColours { get; set; }
     public bool EnableKaizenTimeColours { get; set; }
-    public bool EnableDiscordRichPresence { get; set; }
     public bool DisableOnWeekends { get; set; }
     public TimeSettings TimeSettings { get; set; }
+    public DiscordRichPresenceSettings DiscordRichPresenceSettings { get; set; }
 
     public AppSettings()
     {
@@ -23,4 +23,10 @@ public sealed class TimeSettings
     public string LunchStartTime { get; set; }
     public string LunchEndTime { get; set; }
     public string KaizenStartTime { get; set; } = null!;
+}
+
+public sealed class DiscordRichPresenceSettings
+{
+    public bool EnableRichPresence { get; set; }
+    public bool EnabledOnWeekends { get; set; }
 }

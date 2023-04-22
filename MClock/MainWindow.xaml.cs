@@ -61,13 +61,13 @@ namespace MClock
 
         private void StartDiscordRichPresence()
         {
-            if(_appSettings.EnableDiscordRichPresence)
+            if(_appSettings.DiscordRichPresenceSettings.EnableRichPresence)
                 _discordRpcClient.Initialize();
         }
 
         private void SetDiscordRichPresenceTimeLeft()
         {
-            if (_appSettings.EnableDiscordRichPresence)
+            if (_appSettings.DiscordRichPresenceSettings.EnableRichPresence)
             {
                 _discordRpcClient.SetPresence(new RichPresence
                 {
@@ -92,7 +92,6 @@ namespace MClock
                 EnableNotifications = Convert.ToBoolean(_configuration["EnableNotifications"]),
                 InvertColours = Convert.ToBoolean(_configuration["InvertColours"]),
                 EnableKaizenTimeColours = Convert.ToBoolean(_configuration["EnableKaizenTimeColours"]),
-                EnableDiscordRichPresence = Convert.ToBoolean(_configuration["EnableDiscordRichPresence"]),
                 DisableOnWeekends = Convert.ToBoolean(_configuration["DisableOnWeekends"]),
                 TimeSettings = new TimeSettings
                 {
@@ -101,6 +100,11 @@ namespace MClock
                     LunchStartTime = _configuration.GetSection("TimeSettings")["LunchStartTime"],
                     LunchEndTime = _configuration.GetSection("TimeSettings")["LunchEndTime"],
                     KaizenStartTime = _configuration.GetSection("TimeSettings")["KaizenStartTime"]
+                },
+                DiscordRichPresenceSettings = new DiscordRichPresenceSettings
+                {
+                    EnableRichPresence = Convert.ToBoolean(_configuration.GetSection("DiscordRichPresenceSettings")["EnableRichPresence"]),
+                    EnabledOnWeekends = Convert.ToBoolean(_configuration.GetSection("DiscordRichPresenceSettings")["EnabledOnWeekends"])
                 }
             };
         }
