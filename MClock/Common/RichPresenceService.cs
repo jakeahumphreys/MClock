@@ -11,13 +11,30 @@ public class RichPresenceService
 {
     private readonly MainWindow _mainWindow;
     private readonly AppSettings _appSettings;
-    private readonly DiscordRpcClient _discordRpcClient;
+    private DiscordRpcClient _discordRpcClient;
+    private bool _isEnabledOverride = false;
 
     public RichPresenceService(MainWindow mainWindow, AppSettings appSettings)
     {
         _mainWindow = mainWindow;
         _appSettings = appSettings;
         _discordRpcClient = new DiscordRpcClient("1099310581112119316");
+    }
+
+    public void OverrideRichPresence()
+    {
+        if (!_isEnabledOverride)
+        {
+            _isEnabledOverride = true;
+            SetDiscordLogoVisibility();
+            StopRichPresenceIfEnabled();
+        }
+        else
+        {
+            _discordRpcClient = new DiscordRpcClient("1099310581112119316");
+            _isEnabledOverride = false;
+            StartRichPresenceIfEnabled();
+        }
     }
     
     public string GetTimeLeftString()
@@ -87,8 +104,16 @@ public class RichPresenceService
     {
         Application.Current.Dispatcher.BeginInvoke((ThreadStart) delegate
         {
-            if (IsDiscordRichPresenceEnabled())
+            if (IsDiscordRichPresenceEnabled() && !_isEnabledOverride)
+            {
                 _mainWindow.DiscordConnected.Visibility = Visibility.Visible;
+                _mainWindow.DiscordConnectedDisabled.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                _mainWindow.DiscordConnected.Visibility = Visibility.Hidden;
+                _mainWindow.DiscordConnectedDisabled.Visibility = Visibility.Visible;
+            }
         });
     }
 
@@ -100,7 +125,7 @@ public class RichPresenceService
 
     public void UpdateRichPresenceIfEnabled()
     {
-        if (IsDiscordRichPresenceEnabled())
+        if (IsDiscordRichPresenceEnabled() && !_isEnabledOverride)
         {
             _discordRpcClient.SetPresence(new RichPresence
             {

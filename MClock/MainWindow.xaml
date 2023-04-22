@@ -12,10 +12,10 @@
         </Grid.ColumnDefinitions>
         <TextBox HorizontalAlignment="Center" Margin="5,5,5,5" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" TextAlignment="Center" Name="Timer" FontFamily="Arial Black" FontSize="20"
                  Opacity="0.8" Background="White" OpacityMask="#FFFEFEFE" IsHitTestVisible="False" />
-        <Image Width="20" Height="20" Source="/images/discordlogo.png" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="3,3,3,3" Name="DiscordConnected" Visibility="Hidden"/>
+        <Image Width="20" Height="20" Source="/images/discordlogo.png" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="3,3,3,3" Name="DiscordConnected" Visibility="Hidden" MouseLeftButtonDown="DiscordConnectedImage_mouseDown"/>
+        <Image Width="20" Height="20" Source="/images/discordlogo-disabled.png" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="3,3,3,3" Name="DiscordConnectedDisabled" Visibility="Hidden" MouseLeftButtonDown="DiscordConnectedImage_mouseDown"/>
         <Rectangle Name="TimeLine" Margin="0,0,0,0" HorizontalAlignment="Left" Height="80"  VerticalAlignment="Center" Width="243" Panel.ZIndex="-4" Fill="Red"/>
         <Rectangle Name="BackLine" Margin="0,0,0,0" HorizontalAlignment="Left" Height="80" VerticalAlignment="Center" Width="243" Grid.Column="1" Panel.ZIndex="-5" Fill="Green" />
         <Rectangle Name="NightLine" HorizontalAlignment="Left" Height="80" VerticalAlignment="Center" Width="243" Panel.ZIndex="-4" Fill="Gray" />
-        
     </Grid>
 </Window>

@@ -118,8 +118,12 @@ namespace MClock
         {
             _richPresenceService.StopRichPresenceIfEnabled();
         }
-        
 
+        private void DiscordConnectedImage_mouseDown(object sender, EventArgs e)
+        {
+            _richPresenceService.OverrideRichPresence();
+        }
+        
         private void WindowDeactivated(object sender, EventArgs e)
         {
             var window = (Window)sender;
