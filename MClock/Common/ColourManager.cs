@@ -22,6 +22,7 @@ public sealed class ColourManager
         {
             SetTimelineColour(Colors.Green);
             SetBacklineColour(Colors.Green);
+            SetNightlineColour(Colors.Green);
         }
         else
         {
@@ -51,6 +52,14 @@ public sealed class ColourManager
         Application.Current.Dispatcher.BeginInvoke((ThreadStart) delegate
         {
             _mainWindow.BackLine.Fill = new SolidColorBrush(colour);
+        });
+    }
+    
+    private void SetNightlineColour(Color colour)
+    {
+        Application.Current.Dispatcher.BeginInvoke((ThreadStart) delegate
+        {
+            _mainWindow.NightLine.Fill = new SolidColorBrush(colour);
         });
     }
 }
