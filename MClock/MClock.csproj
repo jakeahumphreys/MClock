@@ -7,6 +7,10 @@
     <UseWPF>true</UseWPF>
     <ApplicationIcon>images\icon.ico</ApplicationIcon>
     <UserSecretsId>723a5714-4c4a-4a03-b4f7-57dc6248da78</UserSecretsId>
+    <Version>1.0.1</Version>
+    <Title>JH &amp; MS</Title>
+    <AssemblyVersion>1.0.1</AssemblyVersion>
+    <FileVersion>1.0.1</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
