@@ -103,9 +103,9 @@ namespace MClock
                 EnableNotifications = Convert.ToBoolean(_configuration["EnableNotifications"]),
                 ColourSettings = new ColourSettings
                 {
-                    InvertColours = Convert.ToBoolean(_configuration["InvertColours"]),
-                    EnableKaizenTimeColours = Convert.ToBoolean(_configuration["EnableKaizenTimeColours"]),
-                    DisableSeparateColoursOnWeekends = Convert.ToBoolean(_configuration["DisableOnWeekends"]),
+                    InvertColours = Convert.ToBoolean(_configuration.GetSection("ColourSettings")["InvertColours"]),
+                    EnableKaizenTimeColours = Convert.ToBoolean(_configuration.GetSection("ColourSettings")["EnableKaizenTimeColours"]),
+                    DisableSeparateColoursOnWeekends = Convert.ToBoolean(_configuration.GetSection("ColourSettings")["DisableSeparateColoursOnWeekends"]),
                 },
                 TimeSettings = new TimeSettings
                 {
