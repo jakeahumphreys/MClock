@@ -39,31 +39,51 @@ public class RichPresenceService
     public string GetTimeLeftString()
     {
         var currentTime = TimeOnly.FromDateTime(DateTime.Now);
-        var timeLeft = TimeHelper.GetEndTime() - currentTime;
 
-        var hoursLeft = Math.Floor((double) timeLeft.Hours);
-        var minutesLeft = Math.Floor((double) timeLeft.Minutes);
-        var secondsLeft = Math.Floor((double) timeLeft.Seconds);
+        if (TimeHelper.IsDuringWork())
+        {
+            var timeLeft = TimeHelper.GetEndTime() - currentTime;
 
-        var timeLeftString = $"{hoursLeft}h:{minutesLeft}m:{secondsLeft}s left";
+            var hoursLeft = Math.Floor((double) timeLeft.Hours);
+            var minutesLeft = Math.Floor((double) timeLeft.Minutes);
+            var secondsLeft = Math.Floor((double) timeLeft.Seconds);
 
-        if (hoursLeft < 0)
-            timeLeftString = $"{minutesLeft}m:{secondsLeft}s left";
+            var timeLeftString = $"{hoursLeft}h:{minutesLeft}m:{secondsLeft}s left";
 
-        return timeLeftString;
+            if (hoursLeft < 0)
+                timeLeftString = $"{minutesLeft}m:{secondsLeft}s left";
+
+            return timeLeftString;
+        }
+        else
+        {
+            var timeSince = currentTime - TimeHelper.GetEndTime();
+
+            var hoursLeft = Math.Floor((double) timeSince.Hours);
+            var minutesLeft = Math.Floor((double) timeSince.Minutes);
+            var secondsLeft = Math.Floor((double) timeSince.Seconds);
+
+            var timeLeftString = $"{hoursLeft}h:{minutesLeft}m:{secondsLeft}s since";
+
+            if (hoursLeft < 0)
+                timeLeftString = $"{minutesLeft}m:{secondsLeft}s since";
+
+            return timeLeftString;
+        }
     }
 
     public string GetStateString()
     {
-        var statusString = "Working away in the code mines";
-
         if (TimeHelper.IsKaizenTime())
-            statusString = "It's Kaizen time, I'm doing a learn";
+           return "It's Kaizen time, I'm doing a learn";
 
         if (TimeHelper.IsLunchTime())
-            statusString = "Lunchtime 🍕";
+            return "Lunchtime 🍕";
 
-        return statusString;
+        if (TimeHelper.IsAfterWork())
+            return "I'm finished 🎉 yet app's still open";
+
+        return "Working away in the code mines";
     }
 
     public string GetSmallImageKey()

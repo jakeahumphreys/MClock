@@ -69,7 +69,12 @@ public class TimeHelper
     
     public static bool IsDuringWork()
     {
-        return GetCurrentTime() < GetEndTime();
+        return GetCurrentTime() < GetEndTime() && GetCurrentTime() > GetStartTime();
+    }
+
+    public static bool IsAfterWork()
+    {
+        return GetCurrentTime() > GetEndTime();
     }
 
     public static bool IsBeforeWork()
@@ -79,7 +84,7 @@ public class TimeHelper
 
     public static bool IsLunchTime()
     {
-        return GetCurrentTime() >= GetStartTime() && GetCurrentTime() < GetLunchEndTime();
+        return GetCurrentTime() >= GetLunchStartTime() && GetCurrentTime() < GetLunchEndTime();
     }
 
     public static bool IsWeekend()
