@@ -6,11 +6,12 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <UserSecretsId>723a5714-4c4a-4a03-b4f7-57dc6248da78</UserSecretsId>
-    <Version>1.0.2</Version>
-    <Title>JH &amp; MS</Title>
-    <AssemblyVersion>1.0.2</AssemblyVersion>
-    <FileVersion>1.0.2</FileVersion>
+    <Version>1.0.3</Version>
+    <Title>MClock</Title>
+    <AssemblyVersion>1.0.3</AssemblyVersion>
+    <FileVersion>1.0.3</FileVersion>
     <ApplicationIcon>images\mclock.ico</ApplicationIcon>
+    <Authors>JH &amp; MS</Authors>
   </PropertyGroup>
 
   <ItemGroup>
