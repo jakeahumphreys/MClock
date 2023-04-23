@@ -68,7 +68,7 @@ namespace MClock
         {
             var time = DateTime.Now;
             var allDay = OuterGrid.ActualWidth;
-            var newWidth = GetNewWidth(time, allDay);
+            var newWidth = MathHelper.GetNewWidth(time, allDay);
             if (TimeHelper.IsBeforeWork())
             {
                 TimeLine.Width = 0;
@@ -90,31 +90,8 @@ namespace MClock
                 NightLine.HorizontalAlignment = HorizontalAlignment.Left;
             }
         }
-        
-        private double GetNewWidth(DateTime now, double fullWidth)
-        {
-            var currentTime = new TimeOnly(now.Hour, now.Minute, now.Second);
-            if (TimeHelper.IsBeforeWork())
-            {
-                var partialDay = (now.Hour) * 60 + now.Minute;
-                var fraction = MathHelper.GetFraction(TimeHelper.GetStartTime().Hour, partialDay);
-                return  fullWidth * fraction;
-            }
-            if (TimeHelper.IsDuringWork())
-            {
-                var partialDay = ((currentTime - TimeHelper.GetStartTime()).TotalMinutes) * 60 + now.Minute;
-                var fraction = MathHelper.GetFraction((TimeHelper.GetEndTime() - TimeHelper.GetStartTime()).TotalMinutes, partialDay);
-                return fullWidth * fraction;
-            }
-            else
-            {
-                var partialDay = ((currentTime - TimeHelper.GetEndTime()).TotalMinutes) * 60 + now.Minute;
-                var fraction = MathHelper.GetFraction((TimeHelper.GetMidnight() - TimeHelper.GetEndTime()).TotalMinutes, partialDay);
-                return fullWidth * fraction;
-            }
-        }
 
-        private void OnWindowClosing(object sender, CancelEventArgs e)
+        private void OnWindowClosing(object? sender, CancelEventArgs e)
         {
             _richPresenceService.StopRichPresenceIfEnabled();
         }

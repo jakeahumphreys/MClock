@@ -44,4 +44,8 @@
     </Resource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Types\WindowPosition.cs" />
+  </ItemGroup>
+
 </Project>
