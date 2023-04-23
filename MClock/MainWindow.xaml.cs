@@ -5,7 +5,6 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using MClock.Common;
 using MClock.Types;
-using Microsoft.Toolkit.Uwp.Notifications;
 
 namespace MClock
 {
@@ -40,7 +39,7 @@ namespace MClock
 
         private void Timer_Loaded(object sender, RoutedEventArgs e)
         {
-            ShowTime();
+            SetTimeLabel();
             var timer = new System.Timers.Timer(1000);
             timer.AutoReset = true;
             timer.Elapsed += ShowTick;
@@ -52,10 +51,10 @@ namespace MClock
             _richPresenceService.UpdateRichPresenceIfEnabled();
             _colourManager.UpdateAppColours();
             _notificationService.HandleNotifications();
-            ShowTime();            
+            SetTimeLabel();            
         }
         
-        private void ShowTime()
+        private void SetTimeLabel()
         {
             Dispatcher.Invoke(() =>
             {
