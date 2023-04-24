@@ -8,10 +8,10 @@
     <UserSecretsId>723a5714-4c4a-4a03-b4f7-57dc6248da78</UserSecretsId>
     <Version>1.0.3</Version>
     <Title>MClock</Title>
-    <AssemblyVersion>1.0.3</AssemblyVersion>
-    <FileVersion>1.0.3</FileVersion>
-    <ApplicationIcon>images\mclock.ico</ApplicationIcon>
+    <AssemblyVersion>1.0.3.1</AssemblyVersion>
+    <FileVersion>1.0.3.1</FileVersion>
     <Authors>JH &amp; MS</Authors>
+    <ApplicationIcon>images\mclock_logo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,7 +29,7 @@
     <None Update="images\lunchTimeOver.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="images\mclock.ico">
+    <None Update="images\mclock_logo.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
