@@ -9,6 +9,8 @@ namespace MClock.Common;
 public sealed class NotificationService
 {
     private readonly AppSettings _appSettings;
+    private bool _lunchStartNotified = false;
+    private bool _lunchEndNotified = false;
 
     public NotificationService(AppSettings appSettings)
     {
@@ -19,7 +21,13 @@ public sealed class NotificationService
     {
         if (!_appSettings.EnableNotifications)
             return;
-        
+
+        var currentTime = TimeHelper.GetCurrentTime();
+        var lunchStartTime = TimeHelper.GetLunchStartTime();
+
+        var timeDifference = currentTime - lunchStartTime;
+        var threshold = TimeSpan.FromSeconds(1);
+
         if (TimeHelper.GetCurrentTime() == TimeHelper.GetEndTime())
         {
             new ToastContentBuilder()
@@ -28,13 +36,15 @@ public sealed class NotificationService
                 .Show();
         }
 
-        if (TimeHelper.GetCurrentTime() == TimeHelper.GetLunchStartTime())
+        if (timeDifference.Duration() <= threshold && !_lunchStartNotified)
         {
+            _lunchEndNotified = true;
             new ToastContentBuilder().AddText("It's lunchtime!").Show();
         }
         
-        if (TimeHelper.GetCurrentTime() == TimeHelper.GetEndTime())
+        if (TimeHelper.GetCurrentTime() == TimeHelper.GetEndTime() && !_lunchEndNotified)
         {
+            _lunchEndNotified = true;
             new ToastContentBuilder()
                 .AddText("Lunchtime's over, back to work!")
                 .AddHeroImage(new Uri($"file:///{Path.GetFullPath("images/lunchTimeOver.png")}"))
