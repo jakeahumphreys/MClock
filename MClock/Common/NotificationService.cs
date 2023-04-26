@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Windows.Shapes;
+using System.Collections.Generic;
+using System.Linq;
 using MClock.Types;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Path = System.IO.Path;
@@ -9,46 +10,67 @@ namespace MClock.Common;
 public sealed class NotificationService
 {
     private readonly AppSettings _appSettings;
-    private bool _lunchStartNotified = false;
-    private bool _lunchEndNotified = false;
+    private List<NotificationEvent> _notificationEvents;
 
     public NotificationService(AppSettings appSettings)
     {
         _appSettings = appSettings;
+        _notificationEvents = new List<NotificationEvent>();
     }
     
     public void HandleNotifications()
     {
         if (!_appSettings.EnableNotifications)
             return;
-
-        var currentTime = TimeHelper.GetCurrentTime();
-        var lunchStartTime = TimeHelper.GetLunchStartTime();
-
-        var timeDifference = currentTime - lunchStartTime;
-        var threshold = TimeSpan.FromSeconds(1);
-
-        if (TimeHelper.GetCurrentTime() == TimeHelper.GetEndTime())
+        
+        if (TimeHelper.GetCurrentTime() >= TimeHelper.GetEndTime())
         {
-            new ToastContentBuilder()
-                .AddText("Work day has finished, remember to patch uncommitted work!")
-                .AddHeroImage(new Uri($"file:///{Path.GetFullPath("images/sunset.jpg")}"))
-                .Show();
+            if (ShouldNotify(NotificationEventType.WorkEnd))
+            {
+                new ToastContentBuilder()
+                    .AddText("Work day has finished, remember to patch uncommitted work!")
+                    .AddHeroImage(new Uri($"file:///{Path.GetFullPath("images/sunset.jpg")}"))
+                    .Show();
+                _notificationEvents.Add(new NotificationEvent(NotificationEventType.WorkEnd, TimeOnly.FromDateTime(DateTime.Now), false));
+            }
+            
         }
 
-        if (timeDifference.Duration() <= threshold && !_lunchStartNotified)
+        if (TimeHelper.IsLunchTime())
         {
-            _lunchEndNotified = true;
-            new ToastContentBuilder().AddText("It's lunchtime!").Show();
+            if (ShouldNotify(NotificationEventType.LunchTimeStart))
+            {
+                new ToastContentBuilder().AddText("It's lunchtime!").Show();
+                _notificationEvents.Add(new NotificationEvent(NotificationEventType.LunchTimeStart, TimeOnly.FromDateTime(DateTime.Now), false));
+            }
         }
         
-        if (TimeHelper.GetCurrentTime() == TimeHelper.GetEndTime() && !_lunchEndNotified)
+        if (TimeHelper.GetCurrentTime() == TimeHelper.GetEndTime())
         {
-            _lunchEndNotified = true;
-            new ToastContentBuilder()
-                .AddText("Lunchtime's over, back to work!")
-                .AddHeroImage(new Uri($"file:///{Path.GetFullPath("images/lunchTimeOver.png")}"))
-                .Show();
+            if (ShouldNotify(NotificationEventType.LunchTimeEnd))
+            {
+                new ToastContentBuilder()
+                    .AddText("Lunchtime's over, back to work!")
+                    .AddHeroImage(new Uri($"file:///{Path.GetFullPath("images/lunchTimeOver.png")}"))
+                    .Show();
+                _notificationEvents.Add(new NotificationEvent(NotificationEventType.LunchTimeEnd, TimeOnly.FromDateTime(DateTime.Now), false));
+            }
         }
+    }
+
+    private bool ShouldNotify(NotificationEventType eventType)
+    {
+        var fiveMinutesAgo = new TimeOnly(TimeHelper.GetCurrentTime().Hour, TimeHelper.GetCurrentTime().Minute - 5, TimeHelper.GetCurrentTime().Second);
+        var recentEvent = _notificationEvents.SingleOrDefault(x =>
+            x.NotificationEventType == eventType &&
+            x.OccurredAt > fiveMinutesAgo);
+
+        if (recentEvent == null)
+            return true;
+
+        if (recentEvent.CanNotifyAgain)
+            return true;
+
+        return false;
     }
 }
