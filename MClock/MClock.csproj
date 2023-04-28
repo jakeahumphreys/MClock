@@ -6,10 +6,10 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <UserSecretsId>723a5714-4c4a-4a03-b4f7-57dc6248da78</UserSecretsId>
-    <Version>1.0.3.3</Version>
+    <Version>1.0.4</Version>
     <Title>MClock</Title>
-    <AssemblyVersion>1.0.3.3</AssemblyVersion>
-    <FileVersion>1.0.3.3</FileVersion>
+    <AssemblyVersion>1.0.4</AssemblyVersion>
+    <FileVersion>1.0.4</FileVersion>
     <Authors>JH &amp; MS</Authors>
     <ApplicationIcon>images\mclock_logo.ico</ApplicationIcon>
   </PropertyGroup>
