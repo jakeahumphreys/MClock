@@ -72,13 +72,16 @@ public class RichPresenceService
         }
     }
 
-    public string GetStateString()
+    private string GetStateString()
     {
         if (TimeHelper.IsKaizenTime())
            return "It's Kaizen time, I'm doing a learn";
 
         if (TimeHelper.IsLunchTime())
             return "Lunchtime 🍕";
+
+        if (TimeHelper.IsDemos())
+            return "Company Demos";
 
         if (TimeHelper.IsAfterWork())
             return "I'm finished 🎉 yet app's still open";
