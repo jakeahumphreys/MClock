@@ -36,6 +36,15 @@ public sealed class NotificationService
             
         }
 
+        if (TimeHelper.IsDemos())
+        {
+            if (ShouldNotify(NotificationEventType.DemosStart))
+            {
+                new ToastContentBuilder().AddText("Demos has started").Show();
+                _notificationEvents.Add(new NotificationEvent(NotificationEventType.DemosStart, TimeOnly.FromDateTime(DateTime.Now), false));
+            }
+        }
+
         if (TimeHelper.IsLunchTime())
         {
             if (ShouldNotify(NotificationEventType.LunchTimeStart))

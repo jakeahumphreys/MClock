@@ -51,7 +51,23 @@ public class TimeHelper
         var minutes = Convert.ToInt32(kaizenStartTime.Substring(3, 2));
         return new TimeOnly(hour, minutes, 0);
     }
-        
+
+    public static TimeOnly GetDemosStartTime()
+    {
+        var demosStartTime = _appSettings.TimeSettings.DemosStartTime;
+        var hour = Convert.ToInt32(demosStartTime.Substring(0, 2));
+        var minutes = Convert.ToInt32(demosStartTime.Substring(3, 2));
+        return new TimeOnly(hour, minutes, 0);
+    }
+
+    public static TimeOnly GetDemosEndTime()
+    {
+        var demosEndTime = _appSettings.TimeSettings.DemosEndTime;
+        var hour = Convert.ToInt32(demosEndTime.Substring(0, 2));
+        var minutes = Convert.ToInt32(demosEndTime.Substring(3, 2));
+        return new TimeOnly(hour, minutes, 0);
+    }
+    
     public static TimeOnly GetMidnight()
     {
         return new TimeOnly(0, 0, 0);
@@ -65,6 +81,11 @@ public class TimeHelper
     public static bool IsKaizenTime()
     {
         return DateTime.Today.DayOfWeek == DayOfWeek.Friday && GetCurrentTime() > GetKaizenStartTime() && GetCurrentTime() < GetEndTime();
+    }
+
+    public static bool IsDemos()
+    {
+        return GetCurrentTime() >= GetDemosStartTime() && GetCurrentTime() <= GetDemosEndTime() && DateTime.Now.DayOfWeek == DayOfWeek.Friday;
     }
     
     public static bool IsDuringWork()

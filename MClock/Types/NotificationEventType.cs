@@ -5,5 +5,6 @@ public enum NotificationEventType
     Unknown = 0,
     LunchTimeStart = 1,
     LunchTimeEnd = 2,
-    WorkEnd
+    DemosStart = 3,
+    WorkEnd = 4
 }

@@ -31,7 +31,9 @@ public sealed class AppSettingsService
                 WorkEndTime = _configuration.GetSection("TimeSettings")["WorkEndTime"],
                 LunchStartTime = _configuration.GetSection("TimeSettings")["LunchStartTime"],
                 LunchEndTime = _configuration.GetSection("TimeSettings")["LunchEndTime"],
-                KaizenStartTime = _configuration.GetSection("TimeSettings")["KaizenStartTime"]
+                KaizenStartTime = _configuration.GetSection("TimeSettings")["KaizenStartTime"],
+                DemosStartTime = _configuration.GetSection("TimeSettings")["DemosStartTime"],
+                DemosEndTime = _configuration.GetSection("TimeSettings")["DemosEndTime"]
             },
             DiscordRichPresenceSettings = new DiscordRichPresenceSettings
             {

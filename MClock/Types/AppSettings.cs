@@ -28,6 +28,8 @@ public sealed class TimeSettings
     public string LunchStartTime { get; set; }
     public string LunchEndTime { get; set; }
     public string KaizenStartTime { get; set; } = null!;
+    public string DemosStartTime { get; set; }
+    public string DemosEndTime { get; set; }
 }
 
 public sealed class DiscordRichPresenceSettings
