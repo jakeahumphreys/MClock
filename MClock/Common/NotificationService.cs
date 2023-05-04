@@ -10,7 +10,7 @@ namespace MClock.Common;
 public sealed class NotificationService
 {
     private readonly AppSettings _appSettings;
-    private List<NotificationEvent> _notificationEvents;
+    private readonly List<NotificationEvent> _notificationEvents;
 
     public NotificationService(AppSettings appSettings)
     {
@@ -33,7 +33,6 @@ public sealed class NotificationService
                     .Show();
                 _notificationEvents.Add(new NotificationEvent(NotificationEventType.WorkEnd, TimeOnly.FromDateTime(DateTime.Now), false));
             }
-            
         }
 
         if (TimeHelper.IsDemos())
@@ -71,15 +70,11 @@ public sealed class NotificationService
     {
         var fiveMinutesAgo = new TimeOnly(TimeHelper.GetCurrentTime().Hour, TimeHelper.GetCurrentTime().Minute - 5, TimeHelper.GetCurrentTime().Second);
         var recentEvent = _notificationEvents.SingleOrDefault(x =>
-            x.NotificationEventType == eventType &&
-            x.OccurredAt > fiveMinutesAgo);
+            x.NotificationEventType == eventType);
 
         if (recentEvent == null)
             return true;
 
-        if (recentEvent.CanNotifyAgain)
-            return true;
-
-        return false;
+        return recentEvent.OccurredAt > fiveMinutesAgo && recentEvent.CanNotifyAgain;
     }
 }
