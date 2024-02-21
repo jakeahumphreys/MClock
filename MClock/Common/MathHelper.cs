@@ -5,12 +5,10 @@ namespace MClock.Common;
 
 public class MathHelper
 {
-    private readonly AppSettings _appSettings;
     private readonly TimeHelper _timeHelper;
 
     public MathHelper(AppSettings appSettings)
     {
-        _appSettings = appSettings;
         _timeHelper = new TimeHelper(appSettings);
     }
     
