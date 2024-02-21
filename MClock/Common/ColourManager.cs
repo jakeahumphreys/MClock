@@ -20,24 +20,15 @@ public sealed class ColourManager
 
     public void UpdateAppColours()
     {
-        if (TimeHelper.IsWeekend() && _appSettings.ColourSettings.DisableSeparateColoursOnWeekends)
+        if (_appSettings.ColourSettings.InvertColours)
         {
             SetTimelineColour(Colors.Green);
-            SetBackLineColour(Colors.Green);
-            SetNightLineColour(Colors.Green);
+            SetBackLineColour(Colors.Red);
         }
-        else
-        {
-            if (_appSettings.ColourSettings.InvertColours)
-            {
-                SetTimelineColour(Colors.Green);
-                SetBackLineColour(Colors.Red);
-            }
 
-            if (_appSettings.ColourSettings.EnableKaizenTimeColours && _timeHelper.IsKaizenTime())
-            {
-                SetTimelineColour(Colors.Purple);
-            }
+        if (_appSettings.ColourSettings.EnableKaizenTimeColours && _timeHelper.IsKaizenTime())
+        {
+            SetTimelineColour(Colors.Purple);
         }
     }
     

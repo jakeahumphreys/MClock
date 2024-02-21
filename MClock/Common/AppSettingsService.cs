@@ -21,7 +21,6 @@ public sealed class AppSettingsService
             {
                 InvertColours = Convert.ToBoolean(_configuration.GetSection("ColourSettings")["InvertColours"]),
                 EnableKaizenTimeColours = Convert.ToBoolean(_configuration.GetSection("ColourSettings")["EnableKaizenTimeColours"]),
-                DisableSeparateColoursOnWeekends = Convert.ToBoolean(_configuration.GetSection("ColourSettings")["DisableSeparateColoursOnWeekends"]),
             },
             TimeSettings = new TimeSettings
             {

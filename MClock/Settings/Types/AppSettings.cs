@@ -16,7 +16,6 @@ public sealed class ColourSettings
 {
     public bool InvertColours { get; set; }
     public bool EnableKaizenTimeColours { get; set; }
-    public bool DisableSeparateColoursOnWeekends { get; set; }
 }
 
 public sealed class TimeSettings
