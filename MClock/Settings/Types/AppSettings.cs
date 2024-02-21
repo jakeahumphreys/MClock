@@ -20,13 +20,13 @@ public sealed class ColourSettings
 
 public sealed class TimeSettings
 {
-    public string WorkStartTime { get; set; } = null!;
-    public string WorkEndTime { get; set; } = null!;
-    public string LunchStartTime { get; set; }
-    public string LunchEndTime { get; set; }
-    public string KaizenStartTime { get; set; } = null!;
-    public string DemosStartTime { get; set; }
-    public string DemosEndTime { get; set; }
+    public string? WorkStartTime { get; set; }
+    public string? WorkEndTime { get; set; }
+    public string? LunchStartTime { get; set; }
+    public string? LunchEndTime { get; set; }
+    public string? KaizenStartTime { get; set; }
+    public string? DemosStartTime { get; set; }
+    public string? DemosEndTime { get; set; }
 }
 
 public sealed class DiscordRichPresenceSettings
