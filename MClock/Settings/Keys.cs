@@ -19,4 +19,7 @@ public static class SettingKeys
 
     public const string ENABLE_RICH_PRESENCE = "EnableRichPresence";
     public const string ENABLED_ON_WEEKENDS = "EnabledOnWeekends";
+
+    public const string ENABLE_KAIZEN_TIME_COLOURS = "EnableKaizenTimeColours";
+    public const string INVERT_COLOURS = "InvertColours";
 }
