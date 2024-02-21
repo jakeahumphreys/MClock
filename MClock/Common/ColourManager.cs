@@ -23,15 +23,15 @@ public sealed class ColourManager
         if (TimeHelper.IsWeekend() && _appSettings.ColourSettings.DisableSeparateColoursOnWeekends)
         {
             SetTimelineColour(Colors.Green);
-            SetBacklineColour(Colors.Green);
-            SetNightlineColour(Colors.Green);
+            SetBackLineColour(Colors.Green);
+            SetNightLineColour(Colors.Green);
         }
         else
         {
             if (_appSettings.ColourSettings.InvertColours)
             {
                 SetTimelineColour(Colors.Green);
-                SetBacklineColour(Colors.Red);
+                SetBackLineColour(Colors.Red);
             }
 
             if (_appSettings.ColourSettings.EnableKaizenTimeColours && _timeHelper.IsKaizenTime())
@@ -49,7 +49,7 @@ public sealed class ColourManager
         });
     }
     
-    private void SetBacklineColour(Color colour)
+    private void SetBackLineColour(Color colour)
     {
         Application.Current.Dispatcher.BeginInvoke((ThreadStart) delegate
         {
@@ -57,7 +57,7 @@ public sealed class ColourManager
         });
     }
     
-    private void SetNightlineColour(Color colour)
+    private void SetNightLineColour(Color colour)
     {
         Application.Current.Dispatcher.BeginInvoke((ThreadStart) delegate
         {
