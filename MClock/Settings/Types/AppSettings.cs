@@ -33,5 +33,4 @@ public sealed class TimeSettings
 public sealed class DiscordRichPresenceSettings
 {
     public bool EnableRichPresence { get; set; }
-    public bool EnabledOnWeekends { get; set; }
 }

@@ -40,7 +40,6 @@ public sealed class AppSettingsService
             DiscordRichPresenceSettings = new DiscordRichPresenceSettings
             {
                 EnableRichPresence = Convert.ToBoolean(_configuration.GetSection(SectionKeys.DISCORD_SETTINGS)[SettingKeys.ENABLE_RICH_PRESENCE]),
-                EnabledOnWeekends = Convert.ToBoolean(_configuration.GetSection(SectionKeys.DISCORD_SETTINGS)[SettingKeys.ENABLED_ON_WEEKENDS])
             }
         };
     }
