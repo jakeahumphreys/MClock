@@ -2,14 +2,15 @@
 
 public sealed class AppSettings
 {
+    public GeneralSettings GeneralSettings { get; set; }
     public ColourSettings ColourSettings { get; set; }
     public TimeSettings TimeSettings { get; set; }
     public DiscordRichPresenceSettings DiscordRichPresenceSettings { get; set; }
+}
 
-    public AppSettings()
-    {
-        TimeSettings = new TimeSettings();
-    }
+public sealed class GeneralSettings
+{
+    public bool CloseAppOnWeekends { get; set; }
 }
 
 public sealed class ColourSettings

@@ -18,6 +18,10 @@ public sealed class AppSettingsService
     {
         return new AppSettings
         {
+            GeneralSettings = new GeneralSettings
+            {
+                CloseAppOnWeekends = Convert.ToBoolean(_configuration.GetSection(SectionKeys.GENERAL_SETTINGS)[SettingKeys.CLOSE_APP_ON_WEEKENDS])
+            },
             ColourSettings = new ColourSettings
             {
                 InvertColours = Convert.ToBoolean(_configuration.GetSection(SectionKeys.COLOUR_SETTINGS)[SettingKeys.INVERT_COLOURS]),

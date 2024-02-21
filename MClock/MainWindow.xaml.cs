@@ -30,6 +30,11 @@ namespace MClock
             Timer.Loaded += Timer_Loaded;
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
             Application.Current.MainWindow.Closing += OnWindowClosing;
+            
+            if (_timeHelper.IsWeekend() && appSettings.GeneralSettings.CloseAppOnWeekends)
+            {
+                Close();
+            }
         }
 
         private static void Current_DispatcherUnhandledException (object sender, DispatcherUnhandledExceptionEventArgs e)

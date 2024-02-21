@@ -2,6 +2,7 @@
 
 public static class SectionKeys
 {
+    public const string GENERAL_SETTINGS = "GeneralSettings";
     public const string DISCORD_SETTINGS = "DiscordRichPresenceSettings";
     public const string COLOUR_SETTINGS = "ColourSettings";
     public const string TIME_SETTINGS = "TimeSettings";
@@ -9,6 +10,8 @@ public static class SectionKeys
 
 public static class SettingKeys
 {
+    public const string CLOSE_APP_ON_WEEKENDS = "CloseAppOnWeekends";
+    
     public const string WORK_START_TIME = "WorkStartTime";
     public const string WORK_END_TIME = "WorkEndTime";
     public const string LUNCH_START_TIME = "LunchStartTime";

@@ -109,7 +109,7 @@ public class RichPresenceService
         if (!_appSettings.DiscordRichPresenceSettings.EnableRichPresence)
             return false;
 
-        if (TimeHelper.IsWeekend() && _appSettings.DiscordRichPresenceSettings.EnabledOnWeekends == false)
+        if (_timeHelper.IsWeekend() && _appSettings.DiscordRichPresenceSettings.EnabledOnWeekends == false)
             return false;
 
         return true;
