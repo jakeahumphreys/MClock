@@ -2,7 +2,6 @@
 
 public sealed class AppSettings
 {
-    public bool AutoStartWorkApps { get; set; }
     public bool EnableNotifications { get; set; }
     public ColourSettings ColourSettings { get; set; }
     public TimeSettings TimeSettings { get; set; }

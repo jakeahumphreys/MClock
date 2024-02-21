@@ -17,7 +17,6 @@ public sealed class AppSettingsService
     {
         return new AppSettings
         {
-            AutoStartWorkApps = Convert.ToBoolean(_configuration["AutoStartWorkApps"]),
             EnableNotifications = Convert.ToBoolean(_configuration["EnableNotifications"]),
             ColourSettings = new ColourSettings
             {
