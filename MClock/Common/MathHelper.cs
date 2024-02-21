@@ -1,33 +1,43 @@
 ﻿using System;
+using MClock.Types;
 
 namespace MClock.Common;
 
-public static class MathHelper
+public class MathHelper
 {
-    private static double GetFraction(double startHour, double partialDay)
+    private readonly AppSettings _appSettings;
+    private readonly TimeHelper _timeHelper;
+
+    public MathHelper(AppSettings appSettings)
+    {
+        _appSettings = appSettings;
+        _timeHelper = new TimeHelper(appSettings);
+    }
+    
+    private double GetFraction(double startHour, double partialDay)
     {
         return partialDay / (startHour * 60.0);
     }
     
-    public static double GetNewWidth(DateTime now, double fullWidth)
+    public double GetNewWidth(DateTime now, double fullWidth)
     {
         var currentTime = new TimeOnly(now.Hour, now.Minute, now.Second);
-        if (TimeHelper.IsBeforeWork())
+        if (_timeHelper.IsBeforeWork())
         {
             var partialDay = (now.Hour) * 60 + now.Minute;
-            var fraction = GetFraction(TimeHelper.GetStartTime().Hour, partialDay);
+            var fraction = GetFraction(_timeHelper.GetStartTime().Hour, partialDay);
             return  fullWidth * fraction;
         }
-        if (TimeHelper.IsDuringWork())
+        if (_timeHelper.IsDuringWork())
         {
-            var partialDay = ((currentTime - TimeHelper.GetStartTime()).TotalMinutes) * 60 + now.Minute;
-            var fraction = GetFraction((TimeHelper.GetEndTime() - TimeHelper.GetStartTime()).TotalMinutes, partialDay);
+            var partialDay = ((currentTime - _timeHelper.GetStartTime()).TotalMinutes) * 60 + now.Minute;
+            var fraction = GetFraction((_timeHelper.GetEndTime() - _timeHelper.GetStartTime()).TotalMinutes, partialDay);
             return fullWidth * fraction;
         }
         else
         {
-            var partialDay = ((currentTime - TimeHelper.GetEndTime()).TotalMinutes) * 60 + now.Minute;
-            var fraction = GetFraction((TimeHelper.GetMidnight() - TimeHelper.GetEndTime()).TotalMinutes, partialDay);
+            var partialDay = ((currentTime - _timeHelper.GetEndTime()).TotalMinutes) * 60 + now.Minute;
+            var fraction = GetFraction((_timeHelper.GetMidnight() - _timeHelper.GetEndTime()).TotalMinutes, partialDay);
             return fullWidth * fraction;
         }
     }

@@ -13,6 +13,7 @@ namespace MClock
         private readonly TimeHelper _timeHelper;
         private readonly RichPresenceService _richPresenceService;
         private readonly ColourManager _colourManager;
+        private readonly MathHelper _mathHelper;
 
         public MainWindow(AppSettings appSettings)
         {
@@ -24,6 +25,7 @@ namespace MClock
             _colourManager.UpdateAppColours();
             _richPresenceService = new RichPresenceService(this, appSettings);
             _richPresenceService.StartRichPresenceIfEnabled();
+            _mathHelper = new MathHelper(appSettings);
 
             Timer.Loaded += Timer_Loaded;
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
@@ -64,15 +66,15 @@ namespace MClock
         {
             var time = DateTime.Now;
             var allDay = OuterGrid.ActualWidth;
-            var newWidth = MathHelper.GetNewWidth(time, allDay);
-            if (TimeHelper.IsBeforeWork())
+            var newWidth = _mathHelper.GetNewWidth(time, allDay);
+            if (_timeHelper.IsBeforeWork())
             {
                 TimeLine.Width = 0;
                 BackLine.Width = allDay;
                 NightLine.Width = allDay - newWidth;
                 NightLine.HorizontalAlignment = HorizontalAlignment.Right;
             }
-            else if (TimeHelper.IsDuringWork())
+            else if (_timeHelper.IsDuringWork())
             {
                 TimeLine.Width = newWidth;
                 BackLine.Width = allDay;

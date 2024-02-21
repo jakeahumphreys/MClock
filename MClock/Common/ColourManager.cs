@@ -9,11 +9,13 @@ public sealed class ColourManager
 {
     private readonly MainWindow _mainWindow;
     private readonly AppSettings _appSettings;
+    private readonly TimeHelper _timeHelper;
 
     public ColourManager(MainWindow mainWindow, AppSettings appSettings)
     {
         _mainWindow = mainWindow;
         _appSettings = appSettings;
+        _timeHelper = new TimeHelper(appSettings);
     }
 
     public void UpdateAppColours()
@@ -32,7 +34,7 @@ public sealed class ColourManager
                 SetBacklineColour(Colors.Red);
             }
 
-            if (_appSettings.ColourSettings.EnableKaizenTimeColours && TimeHelper.IsKaizenTime())
+            if (_appSettings.ColourSettings.EnableKaizenTimeColours && _timeHelper.IsKaizenTime())
             {
                 SetTimelineColour(Colors.Purple);
             }

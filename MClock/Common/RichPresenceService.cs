@@ -12,12 +12,14 @@ public class RichPresenceService
     private readonly AppSettings _appSettings;
     private DiscordRpcClient _discordRpcClient;
     private bool _isEnabledOverride = false;
+    private readonly TimeHelper _timeHelper;
 
     public RichPresenceService(MainWindow mainWindow, AppSettings appSettings)
     {
         _mainWindow = mainWindow;
         _appSettings = appSettings;
         _discordRpcClient = new DiscordRpcClient("1099310581112119316");
+        _timeHelper = new TimeHelper(_appSettings);
     }
 
     public void OverrideRichPresence()
@@ -40,9 +42,9 @@ public class RichPresenceService
     {
         var currentTime = TimeOnly.FromDateTime(DateTime.Now);
 
-        if (TimeHelper.IsDuringWork())
+        if (_timeHelper.IsDuringWork())
         {
-            var timeLeft = TimeHelper.GetEndTime() - currentTime;
+            var timeLeft = _timeHelper.GetEndTime() - currentTime;
 
             var hoursLeft = Math.Floor((double) timeLeft.Hours);
             var minutesLeft = Math.Floor((double) timeLeft.Minutes);
@@ -57,7 +59,7 @@ public class RichPresenceService
         }
         else
         {
-            var timeSince = currentTime - TimeHelper.GetEndTime();
+            var timeSince = currentTime - _timeHelper.GetEndTime();
 
             var hoursLeft = Math.Floor((double) timeSince.Hours);
             var minutesLeft = Math.Floor((double) timeSince.Minutes);
@@ -74,16 +76,16 @@ public class RichPresenceService
 
     private string GetStateString()
     {
-        if (TimeHelper.IsKaizenTime())
+        if (_timeHelper.IsKaizenTime())
            return "It's Kaizen time, I'm doing a learn";
 
-        if (TimeHelper.IsLunchTime())
+        if (_timeHelper.IsLunchTime())
             return "Lunchtime 🍕";
 
-        if (TimeHelper.IsDemos())
+        if (_timeHelper.IsDemos())
             return "Company Demos";
 
-        if (TimeHelper.IsAfterWork())
+        if (_timeHelper.IsAfterWork())
             return "I'm finished 🎉 yet app's still open";
 
         return "Working away in the code mines";
@@ -96,7 +98,7 @@ public class RichPresenceService
     
     public string GetLargeImageKey()
     {
-        if (TimeHelper.IsKaizenTime())
+        if (_timeHelper.IsKaizenTime())
             return "kaizen";
         
         return "nootnoot";
