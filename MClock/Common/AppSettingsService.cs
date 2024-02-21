@@ -17,7 +17,6 @@ public sealed class AppSettingsService
     {
         return new AppSettings
         {
-            EnableNotifications = Convert.ToBoolean(_configuration["EnableNotifications"]),
             ColourSettings = new ColourSettings
             {
                 InvertColours = Convert.ToBoolean(_configuration.GetSection("ColourSettings")["InvertColours"]),
