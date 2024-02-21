@@ -37,8 +37,8 @@ public class RichPresenceService
             StartRichPresenceIfEnabled();
         }
     }
-    
-    public string GetTimeLeftString()
+
+    private string GetTimeLeftString()
     {
         var currentTime = TimeOnly.FromDateTime(DateTime.Now);
 
@@ -91,12 +91,12 @@ public class RichPresenceService
         return "Working away in the code mines";
     }
 
-    public string GetSmallImageKey()
+    private string GetSmallImageKey()
     {
         return "company_logo";
     }
-    
-    public string GetLargeImageKey()
+
+    private string GetLargeImageKey()
     {
         if (_timeHelper.IsKaizenTime())
             return "kaizen";
