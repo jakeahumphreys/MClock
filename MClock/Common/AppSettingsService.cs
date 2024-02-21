@@ -1,4 +1,5 @@
 ﻿using System;
+using MClock.Settings;
 using MClock.Settings.Types;
 using Microsoft.Extensions.Configuration;
 
@@ -19,23 +20,23 @@ public sealed class AppSettingsService
         {
             ColourSettings = new ColourSettings
             {
-                InvertColours = Convert.ToBoolean(_configuration.GetSection("ColourSettings")["InvertColours"]),
-                EnableKaizenTimeColours = Convert.ToBoolean(_configuration.GetSection("ColourSettings")["EnableKaizenTimeColours"]),
+                InvertColours = Convert.ToBoolean(_configuration.GetSection(SectionKeys.COLOUR_SETTINGS)[SettingKeys.INVERT_COLOURS]),
+                EnableKaizenTimeColours = Convert.ToBoolean(_configuration.GetSection(SectionKeys.COLOUR_SETTINGS)[SettingKeys.ENABLE_KAIZEN_TIME_COLOURS]),
             },
             TimeSettings = new TimeSettings
             {
-                WorkStartTime = _configuration.GetSection("TimeSettings")["WorkStartTime"],
-                WorkEndTime = _configuration.GetSection("TimeSettings")["WorkEndTime"],
-                LunchStartTime = _configuration.GetSection("TimeSettings")["LunchStartTime"],
-                LunchEndTime = _configuration.GetSection("TimeSettings")["LunchEndTime"],
-                KaizenStartTime = _configuration.GetSection("TimeSettings")["KaizenStartTime"],
-                DemosStartTime = _configuration.GetSection("TimeSettings")["DemosStartTime"],
-                DemosEndTime = _configuration.GetSection("TimeSettings")["DemosEndTime"]
+                WorkStartTime = _configuration.GetSection(SectionKeys.TIME_SETTINGS)[SettingKeys.WORK_START_TIME],
+                WorkEndTime = _configuration.GetSection(SectionKeys.TIME_SETTINGS)[SettingKeys.WORK_END_TIME],
+                LunchStartTime = _configuration.GetSection(SectionKeys.TIME_SETTINGS)[SettingKeys.LUNCH_START_TIME],
+                LunchEndTime = _configuration.GetSection(SectionKeys.TIME_SETTINGS)[SettingKeys.LUNCH_END_TIME],
+                KaizenStartTime = _configuration.GetSection(SectionKeys.TIME_SETTINGS)[SettingKeys.KAIZEN_START_TIME],
+                DemosStartTime = _configuration.GetSection(SectionKeys.TIME_SETTINGS)[SettingKeys.DEMOS_START_TIME],
+                DemosEndTime = _configuration.GetSection(SectionKeys.TIME_SETTINGS)[SettingKeys.DEMOS_END_TIME]
             },
             DiscordRichPresenceSettings = new DiscordRichPresenceSettings
             {
-                EnableRichPresence = Convert.ToBoolean(_configuration.GetSection("DiscordRichPresenceSettings")["EnableRichPresence"]),
-                EnabledOnWeekends = Convert.ToBoolean(_configuration.GetSection("DiscordRichPresenceSettings")["EnabledOnWeekends"])
+                EnableRichPresence = Convert.ToBoolean(_configuration.GetSection(SectionKeys.DISCORD_SETTINGS)[SettingKeys.ENABLE_RICH_PRESENCE]),
+                EnabledOnWeekends = Convert.ToBoolean(_configuration.GetSection(SectionKeys.DISCORD_SETTINGS)[SettingKeys.ENABLED_ON_WEEKENDS])
             }
         };
     }
