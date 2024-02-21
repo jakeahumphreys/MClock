@@ -4,7 +4,7 @@ namespace MClock.Common;
 
 public static class MathHelper
 {
-    public static double GetFraction(double startHour, double partialDay)
+    private static double GetFraction(double startHour, double partialDay)
     {
         return partialDay / (startHour * 60.0);
     }
@@ -15,19 +15,19 @@ public static class MathHelper
         if (TimeHelper.IsBeforeWork())
         {
             var partialDay = (now.Hour) * 60 + now.Minute;
-            var fraction = MathHelper.GetFraction(TimeHelper.GetStartTime().Hour, partialDay);
+            var fraction = GetFraction(TimeHelper.GetStartTime().Hour, partialDay);
             return  fullWidth * fraction;
         }
         if (TimeHelper.IsDuringWork())
         {
             var partialDay = ((currentTime - TimeHelper.GetStartTime()).TotalMinutes) * 60 + now.Minute;
-            var fraction = MathHelper.GetFraction((TimeHelper.GetEndTime() - TimeHelper.GetStartTime()).TotalMinutes, partialDay);
+            var fraction = GetFraction((TimeHelper.GetEndTime() - TimeHelper.GetStartTime()).TotalMinutes, partialDay);
             return fullWidth * fraction;
         }
         else
         {
             var partialDay = ((currentTime - TimeHelper.GetEndTime()).TotalMinutes) * 60 + now.Minute;
-            var fraction = MathHelper.GetFraction((TimeHelper.GetMidnight() - TimeHelper.GetEndTime()).TotalMinutes, partialDay);
+            var fraction = GetFraction((TimeHelper.GetMidnight() - TimeHelper.GetEndTime()).TotalMinutes, partialDay);
             return fullWidth * fraction;
         }
     }

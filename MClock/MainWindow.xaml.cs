@@ -13,7 +13,6 @@ namespace MClock
         private readonly TimeHelper _timeHelper;
         private readonly RichPresenceService _richPresenceService;
         private readonly ColourManager _colourManager;
-        private readonly NotificationService _notificationService;
 
         public MainWindow(AppSettings appSettings)
         {
@@ -25,7 +24,6 @@ namespace MClock
             _colourManager.UpdateAppColours();
             _richPresenceService = new RichPresenceService(this, appSettings);
             _richPresenceService.StartRichPresenceIfEnabled();
-            _notificationService = new NotificationService(appSettings);
 
             Timer.Loaded += Timer_Loaded;
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
@@ -50,7 +48,6 @@ namespace MClock
         {
             _richPresenceService.UpdateRichPresenceIfEnabled();
             _colourManager.UpdateAppColours();
-            _notificationService.HandleNotifications();
             SetTimeLabel();            
         }
         
