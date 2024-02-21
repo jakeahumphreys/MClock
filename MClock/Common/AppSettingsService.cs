@@ -1,5 +1,5 @@
 ﻿using System;
-using MClock.Types;
+using MClock.Settings.Types;
 using Microsoft.Extensions.Configuration;
 
 namespace MClock.Common;

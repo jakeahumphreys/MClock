@@ -1,5 +1,5 @@
 ﻿using System;
-using MClock.Types;
+using MClock.Settings.Types;
 
 namespace MClock.Common;
 

@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using MClock.Common;
-using MClock.Types;
+using MClock.Settings.Types;
 
 namespace MClock
 {

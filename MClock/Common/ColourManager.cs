@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Windows;
 using System.Windows.Media;
-using MClock.Types;
+using MClock.Settings.Types;
 
 namespace MClock.Common;
 

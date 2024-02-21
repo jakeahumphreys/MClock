@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Windows;
 using DiscordRPC;
-using MClock.Types;
+using MClock.Settings.Types;
 
 namespace MClock.Common;
 

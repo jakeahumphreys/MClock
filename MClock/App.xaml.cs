@@ -2,7 +2,6 @@
 using System.IO;
 using System.Windows;
 using MClock.Common;
-using MClock.Types;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

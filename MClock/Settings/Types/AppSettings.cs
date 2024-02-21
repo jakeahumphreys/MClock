@@ -1,4 +1,4 @@
-﻿namespace MClock.Types;
+﻿namespace MClock.Settings.Types;
 
 public sealed class AppSettings
 {
